@@ -20,7 +20,7 @@ export function Navigation() {
     { label: 'Shops', path: '/shops' },
     { label: 'Products', path: '/products' },
     { label: 'Promotions', path: '/promotions' },
-    { label: 'Categories', hasDropdown: true },
+    { label: 'Categories', path: '#', hasDropdown: true },
   ];
 
   return (
@@ -54,7 +54,7 @@ export function Navigation() {
                     )}
                   </div>
                 ) : (
-                  <Link to={item.path} className="hover:text-primary-foreground/80 transition-colors text-sm sm:body-normal">
+                  <Link to={item.path!} className="hover:text-primary-foreground/80 transition-colors text-sm sm:body-normal">
                     {item.label}
                   </Link>
                 )}
