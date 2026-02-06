@@ -1,0 +1,94 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { ChevronDown, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Button } from './ui/button';
+import { categories } from '../data/mockData';
+import { useState } from 'react';
+
+export function Navigation() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showCategories, setShowCategories] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const menuItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Shops', path: '/shops' },
+    { label: 'Products', path: '/products' },
+    { label: 'Promotions', path: '/promotions' },
+    { label: 'Categories', path: '#', hasDropdown: true },
+  ];
+
+  return (
+    <nav className="bg-primary text-primary-foreground">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between">
+          <ul className="flex items-center gap-8 py-3">
+            {menuItems.map((item) => (
+              <li key={item.label} className="relative">
+                {item.hasDropdown ? (
+                  <div
+                    onMouseEnter={() => setShowCategories(true)}
+                    onMouseLeave={() => setShowCategories(false)}
+                  >
+                    <button className="flex items-center gap-1 hover:text-primary-foreground/80 transition-colors body-normal">
+                      {item.label}
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    {showCategories && (
+                      <div className="absolute top-full left-0 mt-2 bg-white text-foreground rounded-lg shadow-lg py-2 min-w-[200px] z-50">
+                        {categories.map((cat) => (
+                          <Link
+                            key={cat}
+                            to={`/products?category=${encodeURIComponent(cat)}`}
+                            className="block px-4 py-2 hover:bg-muted text-sm"
+                          >
+                            {cat}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link to={item.path} className="hover:text-primary-foreground/80 transition-colors body-normal">
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          
+          <div className="flex items-center gap-4">
+            {isAuthenticated && (
+              <>
+                {user?.role === 'admin' && (
+                  <Link to="/admin/dashboard" className="hover:text-primary-foreground/80 transition-colors body-normal">
+                    Admin Dashboard
+                  </Link>
+                )}
+                {user?.role === 'business' && (
+                  <Link to="/business/dashboard" className="hover:text-primary-foreground/80 transition-colors body-normal">
+                    My Dashboard
+                  </Link>
+                )}
+                <span className="text-sm">Hi, {user?.name}</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="text-primary-foreground hover:text-primary-foreground/80"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
