@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 import { mockUsers } from '../data/mockData';
 
 type User = {
@@ -32,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: foundUser.email,
         role: foundUser.role,
         name: foundUser.name,
-        businessId: foundUser.businessId,
+        businessId: 'businessId' in foundUser ? foundUser.businessId : undefined,
       });
       return true;
     }
