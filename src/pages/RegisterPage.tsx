@@ -36,8 +36,8 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 px-4 py-12">
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 px-4 py-8 sm:py-12">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="hidden lg:block">
           <div className="space-y-6">
@@ -82,30 +82,30 @@ export function RegisterPage() {
 
         {/* Right Side - Register Form */}
         <Card className="shadow-2xl border-0">
-          <CardContent className="p-8 lg:p-12">
-            <div className="flex items-center justify-between mb-8">
+          <CardContent className="p-6 sm:p-8 lg:p-12">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Create Account</h1>
-                <p className="text-muted-foreground">Start your journey with us</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Create Account</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Start your journey with us</p>
               </div>
               <Link to="/">
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Home className="w-5 h-5" />
+                <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </Link>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div>
                 <label className="block text-sm font-semibold mb-2">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="John Doe"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -114,13 +114,13 @@ export function RegisterPage() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -129,13 +129,13 @@ export function RegisterPage() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -144,13 +144,13 @@ export function RegisterPage() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Confirm Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -162,26 +162,26 @@ export function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => setRole('customer')}
-                    className={`p-4 rounded-lg border-2 transition-all ${
+                    className={`p-3 sm:p-4 rounded-lg border-2 transition-all ${
                       role === 'customer'
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <ShoppingBag className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-semibold text-sm">Customer</div>
+                    <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2" />
+                    <div className="font-semibold text-xs sm:text-sm">Customer</div>
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole('business')}
-                    className={`p-4 rounded-lg border-2 transition-all ${
+                    className={`p-3 sm:p-4 rounded-lg border-2 transition-all ${
                       role === 'business'
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <Briefcase className="w-6 h-6 mx-auto mb-2" />
-                    <div className="font-semibold text-sm">Business</div>
+                    <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2" />
+                    <div className="font-semibold text-xs sm:text-sm">Business</div>
                   </button>
                 </div>
               </div>
@@ -200,12 +200,12 @@ export function RegisterPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-base font-semibold">
+              <Button type="submit" className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold">
                 Create Account
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-5 sm:mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{' '}
                 <Link to="/login" className="text-primary font-semibold hover:underline">
