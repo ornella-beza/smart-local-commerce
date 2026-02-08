@@ -4,17 +4,17 @@ import { ShoppingBag, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedi
 export function Footer() {
   return (
     <footer className="bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Brand Section */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                 <ShoppingBag className="w-6 h-6 text-black" />
               </div>
-              <span className="text-2xl font-bold">NiceShop</span>
+              <span className="text-xl sm:text-2xl font-bold">NiceShop</span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-4 text-sm sm:text-base">
               Your trusted local commerce platform connecting businesses and customers across Rwanda.
             </p>
             <div className="flex gap-3">
@@ -108,12 +108,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-8 mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
+        <div className="border-t border-white/10 pt-6 sm:pt-8 mt-6 sm:mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
               © 2026 NiceShop. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs sm:text-sm">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 Privacy Policy
               </a>

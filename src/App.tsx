@@ -13,6 +13,8 @@ import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { PromotionsPage } from './pages/PromotionsPage';
 import { PromotionDetailPage } from './pages/PromotionDetailPage';
+import { BlogPage } from './pages/BlogPage';
+import { BlogDetailPage } from './pages/BlogDetailPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { BusinessDashboard } from './pages/BusinessDashboard';
 
@@ -57,6 +59,8 @@ function App() {
           <Route path="/product/:id" element={<Layout><ProductDetailPage /></Layout>} />
           <Route path="/promotions" element={<Layout><PromotionsPage /></Layout>} />
           <Route path="/promotion/:id" element={<Layout><PromotionDetailPage /></Layout>} />
+          <Route path="/blog" element={<Layout><BlogPage /></Layout>} />
+          <Route path="/blog/:id" element={<Layout><BlogDetailPage /></Layout>} />
           
           <Route
             path="/admin/dashboard"
