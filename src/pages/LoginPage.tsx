@@ -26,21 +26,21 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-12">
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8 sm:py-12">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="hidden lg:block">
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center">
-                <ShoppingBag className="w-8 h-8 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary rounded-xl sm:rounded-2xl flex items-center justify-center">
+                <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">NiceShop</h1>
-                <p className="text-muted-foreground">Local Commerce Platform</p>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">NiceShop</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">Local Commerce Platform</p>
               </div>
             </div>
-            <h2 className="text-4xl font-bold leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
               Welcome back to your
               <span className="text-primary"> local marketplace</span>
             </h2>
@@ -62,30 +62,30 @@ export function LoginPage() {
 
         {/* Right Side - Login Form */}
         <Card className="shadow-2xl border-0">
-          <CardContent className="p-8 lg:p-12">
-            <div className="flex items-center justify-between mb-8">
+          <CardContent className="p-6 sm:p-8 lg:p-12">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                <p className="text-muted-foreground">Sign in to continue shopping</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Welcome Back</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Sign in to continue shopping</p>
               </div>
               <Link to="/">
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Home className="w-5 h-5" />
+                <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </Link>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div>
                 <label className="block text-sm font-semibold mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -94,13 +94,13 @@ export function LoginPage() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="pl-11 h-12"
+                    className="pl-10 sm:pl-11 h-11 sm:h-12"
                     required
                   />
                 </div>
@@ -113,32 +113,18 @@ export function LoginPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-base font-semibold">
+              <Button type="submit" className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold">
                 Sign In
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-5 sm:mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-primary font-semibold hover:underline">
                   Create one now
                 </Link>
               </p>
-            </div>
-
-            <div className="mt-8 p-5 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-              <p className="text-sm font-semibold mb-3 text-center">🎯 Demo Accounts</p>
-              <div className="text-xs space-y-2">
-                <div className="bg-white p-3 rounded-lg">
-                  <p className="font-semibold text-foreground">Admin Account</p>
-                  <p className="text-muted-foreground">admin@niceshop.com / admin123</p>
-                </div>
-                <div className="bg-white p-3 rounded-lg">
-                  <p className="font-semibold text-foreground">Business Owner</p>
-                  <p className="text-muted-foreground">simba@shop.com / business123</p>
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
