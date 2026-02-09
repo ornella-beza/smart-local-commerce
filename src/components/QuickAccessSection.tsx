@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Store, Package, Tag, ArrowRight } from 'lucide-react';
+import { Store, Tag, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { businesses, products, promotions } from '../data/mockData';

@@ -4,7 +4,7 @@ import { businesses, products, promotions } from '../data/mockData';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Package, Tag, Plus, TrendingUp, Store, ArrowUp, DollarSign, ShoppingCart, Eye, Calendar } from 'lucide-react';
+import { Package, Tag, Plus, TrendingUp, ArrowUp, DollarSign, ShoppingCart, Eye, Calendar } from 'lucide-react';
 import { BarChart, LineChart } from '../components/Charts';
 
 export function BusinessDashboard() {
@@ -39,16 +39,6 @@ export function BusinessDashboard() {
     { label: 'May', value: 55000 },
     { label: 'Jun', value: 67000 },
   ];
-
-  const categoryData = userProducts.reduce((acc, product) => {
-    const existing = acc.find((item) => item.label === product.category);
-    if (existing) {
-      existing.value++;
-    } else {
-      acc.push({ label: product.category, value: 1, color: '#3b82f6' });
-    }
-    return acc;
-  }, [] as { label: string; value: number; color: string }[]);
 
   const stats = [
     { 

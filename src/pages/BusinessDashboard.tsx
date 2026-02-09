@@ -4,15 +4,16 @@ import { businesses, products, promotions } from '../data/mockData';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Package, Tag, Plus, Calendar, ChevronDown, Download, FileText, FileSpreadsheet, File } from 'lucide-react';
+import { Package, Tag, Plus, Calendar, ChevronDown, FileText, FileSpreadsheet, File } from 'lucide-react';
 import { BarChart, LineChart } from '../components/Charts';
-import { DonutChart } from '../components/DonutChart';
 
 export function BusinessDashboard() {
   const { user } = useAuth();
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddPromo, setShowAddPromo] = useState(false);
   const [dateRange, setDateRange] = useState('This Month');
+  const [selectedService, setSelectedService] = useState('All');
+  const [selectedPost, setSelectedPost] = useState('All');
 
   const userBusinesses = businesses.filter((b) => b.ownerId === user?.id);
   const userProducts = products.filter((p) => 
@@ -39,13 +40,6 @@ export function BusinessDashboard() {
     { label: 'Fri', value: 10 },
     { label: 'Sat', value: 15 },
     { label: 'Sun', value: 13 },
-  ];
-
-  const trafficSources = [
-    { label: 'Direct', value: 45, color: '#3b82f6' },
-    { label: 'Organic Search', value: 35, color: '#10b981' },
-    { label: 'Referral', value: 12, color: '#f59e0b' },
-    { label: 'Social', value: 8, color: '#8b5cf6' },
   ];
 
   const handleExport = (format: 'pdf' | 'csv' | 'excel') => {
@@ -116,7 +110,16 @@ export function BusinessDashboard() {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <label className="text-xs text-gray-500 mb-2 block font-medium">Services</label>
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-sm text-gray-900">All</span>
+              <select
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+                className="flex-1 bg-transparent border-none outline-none font-semibold text-sm text-gray-900 cursor-pointer"
+              >
+                <option>All</option>
+                <option>Products</option>
+                <option>Promotions</option>
+                <option>Orders</option>
+              </select>
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </div>
           </div>
@@ -124,7 +127,16 @@ export function BusinessDashboard() {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <label className="text-xs text-gray-500 mb-2 block font-medium">Posts</label>
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-sm text-gray-900">All</span>
+              <select
+                value={selectedPost}
+                onChange={(e) => setSelectedPost(e.target.value)}
+                className="flex-1 bg-transparent border-none outline-none font-semibold text-sm text-gray-900 cursor-pointer"
+              >
+                <option>All</option>
+                <option>Published</option>
+                <option>Draft</option>
+                <option>Scheduled</option>
+              </select>
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </div>
           </div>

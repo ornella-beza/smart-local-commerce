@@ -52,12 +52,20 @@ export function LineChart({ data, title }: LineChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const maxValue = Math.max(...data.map((d) => d.value));
   const chartHeight = 200;
+  const padding = 20;
 
   return (
     <div className="w-full">
       <h3 className="font-semibold mb-4 text-sm sm:text-base">{title}</h3>
-      <div className="relative" style={{ height: chartHeight }}>
+      <div className="relative" style={{ height: chartHeight + 40 }}>
         <svg width="100%" height={chartHeight} className="overflow-visible">
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.05" />
+            </linearGradient>
+          </defs>
+
           {/* Grid lines */}
           {[0, 1, 2, 3, 4].map((i) => (
             <line
@@ -68,15 +76,30 @@ export function LineChart({ data, title }: LineChartProps) {
               y2={i * (chartHeight / 4)}
               stroke="#e5e7eb"
               strokeWidth="1"
+              strokeDasharray="4 4"
             />
           ))}
+
+          {/* Area fill */}
+          <path
+            d={`M 0 ${chartHeight} ` +
+              data
+                .map((d, i) => {
+                  const x = (i / (data.length - 1)) * 100;
+                  const y = chartHeight - (d.value / maxValue) * (chartHeight - padding);
+                  return `L ${x}% ${y}`;
+                })
+                .join(' ') +
+              ` L 100% ${chartHeight} Z`}
+            fill="url(#lineGradient)"
+          />
 
           {/* Line path */}
           <path
             d={data
               .map((d, i) => {
                 const x = (i / (data.length - 1)) * 100;
-                const y = chartHeight - (d.value / maxValue) * (chartHeight - 20);
+                const y = chartHeight - (d.value / maxValue) * (chartHeight - padding);
                 return `${i === 0 ? 'M' : 'L'} ${x}% ${y}`;
               })
               .join(' ')}
@@ -90,34 +113,37 @@ export function LineChart({ data, title }: LineChartProps) {
           {/* Data points */}
           {data.map((d, i) => {
             const x = (i / (data.length - 1)) * 100;
-            const y = chartHeight - (d.value / maxValue) * (chartHeight - 20);
+            const y = chartHeight - (d.value / maxValue) * (chartHeight - padding);
             return (
               <g key={i}>
                 <circle
                   cx={`${x}%`}
                   cy={y}
-                  r={hoveredIndex === i ? "6" : "4"}
-                  fill="#3b82f6"
-                  className="cursor-pointer transition-all"
+                  r={hoveredIndex === i ? "7" : "5"}
+                  fill="white"
+                  stroke="#3b82f6"
+                  strokeWidth="3"
+                  className="cursor-pointer transition-all drop-shadow-md"
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 />
                 {hoveredIndex === i && (
                   <>
                     <rect
-                      x={`calc(${x}% - 30px)`}
-                      y={y - 40}
-                      width="60"
-                      height="30"
+                      x={`calc(${x}% - 35px)`}
+                      y={y - 45}
+                      width="70"
+                      height="32"
                       fill="#1f2937"
-                      rx="4"
+                      rx="6"
+                      className="drop-shadow-lg"
                     />
                     <text
                       x={`${x}%`}
-                      y={y - 20}
+                      y={y - 24}
                       textAnchor="middle"
                       fill="white"
-                      fontSize="12"
+                      fontSize="13"
                       fontWeight="bold"
                     >
                       {d.value}
@@ -130,7 +156,7 @@ export function LineChart({ data, title }: LineChartProps) {
         </svg>
 
         {/* X-axis labels */}
-        <div className="flex justify-between mt-2 text-xs text-gray-500">
+        <div className="flex justify-between mt-2 text-xs text-gray-500 font-medium">
           {data.map((d, i) => (
             <span key={i}>{d.label}</span>
           ))}
