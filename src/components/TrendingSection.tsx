@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { CategoryCard } from './CategoryCard';
+import { Link } from 'react-router-dom';
 
 export function TrendingSection() {
   return (
@@ -26,10 +27,12 @@ export function TrendingSection() {
                 Elegant, comfortable, and sustainable fashion for every occasion.
               </p>
               
-              <Button size="lg" className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base rounded-full group">
-                Explore Collection 
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link to="/products">
+                <Button size="lg" className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base rounded-full group">
+                  Explore Collection 
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </div>
             
             <div className="mt-6 sm:mt-8">

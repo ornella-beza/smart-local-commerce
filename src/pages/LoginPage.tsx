@@ -41,20 +41,20 @@ export function LoginPage() {
               </div>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
-              Welcome back to your
-              <span className="text-primary"> local marketplace</span>
+              Manage your
+              <span className="text-primary"> business platform</span>
             </h2>
             <p className="text-lg text-muted-foreground">
-              Connect with local businesses, discover amazing products, and support your community.
+              Access your dashboard to manage products, track analytics, and grow your business.
             </p>
-            <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="space-y-3 pt-4">
               <div className="p-4 bg-white rounded-xl shadow-sm">
-                <div className="text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">Local Shops</div>
+                <div className="font-bold text-lg mb-1">👨‍💼 Admin Dashboard</div>
+                <div className="text-sm text-muted-foreground">Full platform control, monitor all businesses, view analytics</div>
               </div>
               <div className="p-4 bg-white rounded-xl shadow-sm">
-                <div className="text-3xl font-bold text-primary">10K+</div>
-                <div className="text-sm text-muted-foreground">Products</div>
+                <div className="font-bold text-lg mb-1">🏪 Business Dashboard</div>
+                <div className="text-sm text-muted-foreground">Manage your products, promotions, and sales</div>
               </div>
             </div>
           </div>
@@ -65,8 +65,8 @@ export function LoginPage() {
           <CardContent className="p-6 sm:p-8 lg:p-12">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Welcome Back</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Sign in to continue shopping</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Admin & Business Login</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Platform management access</p>
               </div>
               <Link to="/">
                 <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">

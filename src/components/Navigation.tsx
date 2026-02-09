@@ -25,33 +25,40 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="bg-primary text-primary-foreground overflow-x-auto">
+    <nav className="bg-primary text-primary-foreground sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
-          <ul className="flex items-center gap-4 sm:gap-6 md:gap-8 py-3 overflow-x-auto whitespace-nowrap">
+          <ul className="flex items-center gap-4 sm:gap-6 md:gap-8 py-3">
             {menuItems.map((item) => (
               <li key={item.label} className="relative flex-shrink-0">
                 {item.hasDropdown ? (
-                  <div
-                    onMouseEnter={() => setShowCategories(true)}
-                    onMouseLeave={() => setShowCategories(false)}
-                  >
-                    <button className="flex items-center gap-1 hover:text-primary-foreground/80 transition-colors text-sm sm:body-normal">
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowCategories(!showCategories)}
+                      className="flex items-center gap-1 hover:text-primary-foreground/80 transition-colors text-sm sm:body-normal"
+                    >
                       {item.label}
                       <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                     {showCategories && (
-                      <div className="absolute top-full left-0 mt-2 bg-white text-foreground rounded-lg shadow-lg py-2 min-w-[200px] z-50">
-                        {categories.map((cat) => (
-                          <Link
-                            key={cat}
-                            to={`/products?category=${encodeURIComponent(cat)}`}
-                            className="block px-4 py-2 hover:bg-muted text-sm"
-                          >
-                            {cat}
-                          </Link>
-                        ))}
-                      </div>
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setShowCategories(false)}
+                        />
+                        <div className="absolute top-full left-0 mt-2 bg-white text-foreground rounded-lg shadow-2xl py-2 min-w-[240px] z-50 border border-gray-200">
+                          {categories.map((cat) => (
+                            <Link
+                              key={cat}
+                              to={`/products?category=${encodeURIComponent(cat)}`}
+                              className="block px-4 py-2.5 hover:bg-gray-100 text-sm transition-colors text-gray-900 font-medium"
+                              onClick={() => setShowCategories(false)}
+                            >
+                              {cat}
+                            </Link>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 ) : (

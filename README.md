@@ -214,27 +214,61 @@ smart-local-commerce/
 
 ## 🔐 Authentication
 
+### User Roles
+
+**NiceShop has two types of authenticated users:**
+
+#### 👨‍💼 Admin
+- **Full platform control**
+- Monitor all businesses and products
+- View platform-wide analytics
+- Access admin dashboard with charts and statistics
+- Track business registrations and activity
+
+#### 🏪 Business Owner
+- **Manage own business**
+- Add/edit products and promotions
+- View business-specific analytics
+- Track sales and inventory
+- Access business dashboard
+
+#### 🛍️ Customer (No Login Required)
+- **Browse without account**
+- Search and filter products
+- View shop details and promotions
+- No registration needed for browsing
+- Future: Cart and checkout functionality
+
 ### Test Accounts
 
 ```typescript
 // Admin Account
 Email: admin@niceshop.com
 Password: admin123
+Access: Admin Dashboard - Full platform control
 
-// Business Owner 1
+// Business Owner 1 (Simba Supermarket)
 Email: simba@shop.com
 Password: business123
+Access: Business Dashboard - Manage products & promotions
 
-// Business Owner 2
+// Business Owner 2 (Aaky Fashion)
 Email: aaky@shop.com
 Password: business123
+Access: Business Dashboard - Manage products & promotions
 ```
 
-### User Roles
+### Dashboard Differences
 
-- **Admin** - Full platform access, analytics, business monitoring
-- **Business Owner** - Manage own products and promotions
-- **Customer** - Browse and shop (default role)
+| Feature | Admin Dashboard | Business Dashboard |
+|---------|----------------|--------------------|
+| **View All Businesses** | ✅ Yes | ❌ No |
+| **View All Products** | ✅ Yes | ❌ Only own products |
+| **Platform Analytics** | ✅ Yes | ❌ No |
+| **Manage Own Products** | ❌ No | ✅ Yes |
+| **Create Promotions** | ❌ No | ✅ Yes |
+| **Business Analytics** | ❌ No | ✅ Yes |
+| **User Management** | ✅ Yes | ❌ No |
 
 ---
 
