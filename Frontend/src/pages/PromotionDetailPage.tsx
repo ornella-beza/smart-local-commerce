@@ -1,16 +1,78 @@
 import { useParams, Link } from 'react-router-dom';
-import { promotions, businesses } from '../data/mockData';
+import { useState, useEffect } from 'react';
+import { api } from '../services/api';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { ArrowLeft, Store, MapPin, Calendar, Tag } from 'lucide-react';
 
+interface Promotion {
+  _id: string;
+  title: string;
+  description: string;
+  discountValue: number;
+  discountType: 'percentage' | 'fixed';
+  bannerImage?: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  shop?: { _id: string; name: string; location: string; image?: string } | string;
+  isActive: boolean;
+  terms?: string;
+}
+
+interface Shop {
+  _id: string;
+  name: string;
+  location: string;
+  image?: string;
+}
+
 export function PromotionDetailPage() {
   const { id } = useParams();
-  const promotion = promotions.find((p) => p.id === id);
-  const business = promotion ? businesses.find((b) => b.id === promotion.businessId) : null;
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
+  const [shop, setShop] = useState<Shop | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!promotion) {
+  useEffect(() => {
+    const fetchPromotion = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        const promotionData = await api.getPromotion(id);
+        setPromotion(promotionData);
+        
+        // Fetch shop if promotion has shop reference
+        if (promotionData.shop) {
+          const shopId = typeof promotionData.shop === 'object' ? promotionData.shop._id : promotionData.shop;
+          try {
+            const shopData = await api.getShop(shopId);
+            setShop(shopData);
+          } catch (err) {
+            console.error('Failed to fetch shop:', err);
+          }
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load promotion');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPromotion();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading promotion...</p>
+      </div>
+    );
+  }
+
+  if (error || !promotion) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -26,6 +88,9 @@ export function PromotionDetailPage() {
   const startDate = new Date(promotion.startDate);
   const endDate = new Date(promotion.endDate);
   const daysLeft = Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+  const discountText = promotion.discountType === 'percentage' 
+    ? `${promotion.discountValue}% OFF` 
+    : `RWF ${promotion.discountValue} OFF`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,7 +105,7 @@ export function PromotionDetailPage() {
           <div>
             <Card className="overflow-hidden">
               <img
-                src={promotion.image}
+                src={promotion.bannerImage || '/placeholder-image.jpg'}
                 alt={promotion.title}
                 className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover"
               />
@@ -51,7 +116,7 @@ export function PromotionDetailPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
               <Badge className="bg-destructive text-white text-base sm:text-lg px-3 sm:px-4 py-1.5 sm:py-2">
-                {promotion.discount}% OFF
+                {discountText}
               </Badge>
               {daysLeft > 0 && (
                 <Badge variant="outline" className="text-sm sm:text-base px-2 sm:px-3 py-0.5 sm:py-1">
@@ -65,25 +130,27 @@ export function PromotionDetailPage() {
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8">{promotion.description}</p>
 
             {/* Business Info */}
-            {business && (
+            {shop && (
               <Card className="mb-6 sm:mb-8">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center gap-3 sm:gap-4">
-                    <img
-                      src={business.logo}
-                      alt={business.name}
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover"
-                    />
+                    {shop.image && (
+                      <img
+                        src={shop.image}
+                        alt={shop.name}
+                        className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover"
+                      />
+                    )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
                         <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        <Link to={`/shop/${business.id}`} className="font-semibold text-sm sm:text-base hover:underline">
-                          {business.name}
+                        <Link to={`/shop/${shop._id}`} className="font-semibold text-sm sm:text-base hover:underline">
+                          {shop.name}
                         </Link>
                       </div>
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                         <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        <span>{business.area}</span>
+                        <span>{shop.location}</span>
                       </div>
                     </div>
                   </div>
@@ -92,12 +159,14 @@ export function PromotionDetailPage() {
             )}
 
             {/* Action Button */}
-            <Link to={`/shop/${business?.id}`}>
-              <Button size="lg" className="w-full h-12 sm:h-14 text-sm sm:text-base mb-6 sm:mb-8">
-                <Store className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Visit Shop
-              </Button>
-            </Link>
+            {shop && (
+              <Link to={`/shop/${shop._id}`}>
+                <Button size="lg" className="w-full h-12 sm:h-14 text-sm sm:text-base mb-6 sm:mb-8">
+                  <Store className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  Visit Shop
+                </Button>
+              </Link>
+            )}
 
             {/* Promotion Details */}
             <Card>
@@ -108,7 +177,7 @@ export function PromotionDetailPage() {
                     <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground mt-0.5" />
                     <div className="flex-1">
                       <p className="text-xs sm:text-sm text-muted-foreground">Discount</p>
-                      <p className="font-semibold text-base sm:text-lg">{promotion.discount}% OFF</p>
+                      <p className="font-semibold text-base sm:text-lg">{discountText}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -124,9 +193,18 @@ export function PromotionDetailPage() {
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground mt-0.5" />
                     <div className="flex-1">
                       <p className="text-xs sm:text-sm text-muted-foreground">Location</p>
-                      <p className="font-semibold text-sm sm:text-base">{promotion.area}</p>
+                      <p className="font-semibold text-sm sm:text-base">{promotion.location}</p>
                     </div>
                   </div>
+                  {promotion.terms && (
+                    <div className="flex items-start gap-3">
+                      <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs sm:text-sm text-muted-foreground">Terms & Conditions</p>
+                        <p className="font-semibold text-sm sm:text-base">{promotion.terms}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -10,19 +10,46 @@ export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     
-    const success = login(email, password);
+    console.log('[LoginPage] Attempting login for:', email);
+    const success = await login(email, password);
+    console.log('[LoginPage] Login result:', success);
+    
     if (success) {
-      navigate('/');
+      // Get user role to determine redirect
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          console.log('[LoginPage] User data:', user);
+          
+          // Redirect based on role
+          if (user.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else if (user.role === 'business_owner') {
+            navigate('/business/dashboard');
+          } else {
+            navigate('/');
+          }
+        } catch (err) {
+          console.error('[LoginPage] Error parsing user data:', err);
+          navigate('/');
+        }
+      } else {
+        navigate('/');
+      }
     } else {
       setError('Invalid email or password');
     }
+    setLoading(false);
   };
 
   return (
@@ -113,8 +140,12 @@ export function LoginPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold">
-                Sign In
+              <Button 
+                type="submit" 
+                className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold"
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
 

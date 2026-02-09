@@ -86,38 +86,45 @@ export function ProductCard({
   };
 
   return (
-    <Card className="group relative overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-md">
       <CardContent className="p-3 sm:p-6">
-        <div className="relative mb-3 sm:mb-4">
+        <div className="relative mb-3 sm:mb-4 overflow-hidden rounded-lg">
           {badge && (
-            <Badge className={`absolute top-1 left-1 sm:top-2 sm:left-2 ${getBadgeClassName()} px-2 sm:px-4 py-1 sm:py-1.5 rounded-none text-xs font-semibold whitespace-nowrap uppercase`}>
+            <Badge className={`absolute top-1 left-1 sm:top-2 sm:left-2 ${getBadgeClassName()} px-2 sm:px-4 py-1 sm:py-1.5 rounded-none text-xs font-semibold whitespace-nowrap uppercase z-10 animate-fade-in`}>
               {badge.text}
             </Badge>
           )}
           <button 
-            className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-white rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-muted"
+            className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-white/90 backdrop-blur-sm rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg hover:bg-red-50 hover:scale-110 z-10"
             aria-label="Add to wishlist"
             type="button"
           >
-            <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Heart className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:fill-red-500 group-hover:text-red-500" />
           </button>
-          <img 
-            src={image} 
-            alt={imageAlt}
-            className="w-full h-48 sm:h-64 object-cover"
-          />
+          <div className="relative overflow-hidden rounded-lg">
+            <img 
+              src={image} 
+              alt={imageAlt}
+              className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </div>
         </div>
         
         {category && (
-          <p className="text-muted-foreground uppercase tracking-wider mb-1 sm:mb-2 text-xs" style={{ fontWeight: 500 }}>
+          <p className="text-muted-foreground uppercase tracking-wider mb-1 sm:mb-2 text-xs transition-colors group-hover:text-primary" style={{ fontWeight: 500 }}>
             {category}
           </p>
         )}
         
-        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:body-normal line-clamp-2">{title}</h3>
+        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:body-normal line-clamp-2 transition-colors group-hover:text-primary">{title}</h3>
         
         {rating && (
-          <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3">
+          <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 animate-fade-in">
             <div className="flex items-center gap-0.5">
               {renderStars()}
             </div>
@@ -135,7 +142,7 @@ export function ProductCard({
               RWF {originalPrice.toFixed(0)}
             </span>
           )}
-          <span className="text-lg sm:text-2xl font-bold">RWF {price.toFixed(0)}</span>
+          <span className="text-lg sm:text-2xl font-bold text-primary transition-transform group-hover:scale-105">RWF {price.toFixed(0)}</span>
         </div>
 
         {colors && colors.length > 0 && (
@@ -143,7 +150,7 @@ export function ProductCard({
             {colors.map((color, index) => (
               <button
                 key={index}
-                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-transparent hover:border-gray-300 transition-colors"
+                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-transparent hover:border-gray-300 transition-all duration-200 hover:scale-125 hover:shadow-md"
                 style={{ backgroundColor: color }}
                 aria-label={`Select ${color} color`}
                 type="button"
