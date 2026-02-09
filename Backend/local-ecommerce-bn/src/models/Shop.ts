@@ -8,7 +8,7 @@ export interface ShopDocument extends Document {
   email: string;
   image?: string;
 }
-
+//this is the change i did 
 const shopSchema = new Schema<ShopDocument>({
   name: { type: String, required: true, unique: true },
   description: { type: String },

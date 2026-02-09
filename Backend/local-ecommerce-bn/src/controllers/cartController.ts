@@ -16,7 +16,7 @@ export const getCart = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
+//this is the change we did
 export const addToCart = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
