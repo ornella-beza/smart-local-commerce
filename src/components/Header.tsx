@@ -11,9 +11,11 @@ export function Header() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-    }
+    if (!searchTerm.trim()) return;
+
+    // Navigate to search results page with query
+    navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+    setSearchTerm('');
   };
 
   return (
