@@ -284,19 +284,6 @@ export function BusinessDashboard() {
               <p className="font-semibold mb-2">Error Loading Dashboard</p>
               <p className="mb-3">{error}</p>
               <div className="flex gap-3">
-=======
-  const handleExport = (format: 'pdf' | 'csv' | 'excel') => {
-    alert(`Exporting dashboard data as ${format.toUpperCase()}...`);
-    // Implementation would go here
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
-        {/* Header with Export Buttons */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Business Dashboard</h1>
             <p className="text-gray-600">Monitor your business performance and analytics</p>
           </div>
           <div className="flex items-center gap-2">
@@ -530,15 +517,10 @@ export function BusinessDashboard() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-<<<<<<< HEAD
                   onClick={() => {
                     setError(null);
                     fetchData();
                   }}
-=======
-                  onClick={() => setShowAddProduct(!showAddProduct)}
-                  className="bg-black hover:bg-gray-800"
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
                 >
                   Retry
                 </Button>
@@ -807,21 +789,6 @@ export function BusinessDashboard() {
                   </table>
                 </div>
               )}
-=======
-              {showAddProduct && (
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100 space-y-3">
-                  <Input placeholder="Product name" className="bg-white" />
-                  <Input placeholder="Price (RWF)" type="number" className="bg-white" />
-                  <Input placeholder="Category" className="bg-white" />
-                  <Button size="sm" className="w-full bg-black hover:bg-gray-800">Save Product</Button>
-                </div>
-              )}
-
-              <div className="space-y-3 max-h-80 overflow-y-auto">
-                {userProducts.map((product) => (
-                  <div key={product.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <img src={product.image} alt={product.name} className="w-14 h-14 rounded-lg object-cover" />
-                    <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm truncate">{product.name}</p>
                       <p className="text-sm text-gray-600">RWF {product.price.toLocaleString()}</p>
                       <p className="text-xs text-gray-500">{product.category}</p>
@@ -849,19 +816,6 @@ export function BusinessDashboard() {
                   <Badge>{promotions.length}</Badge>
                 </div>
                 <Button onClick={() => setShowAddPromotion(true)}>
-=======
-          <Card className="bg-white border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <Tag className="w-5 h-5 text-orange-600" />
-                  <h2 className="font-bold text-lg">Active Promotions</h2>
-                  <span className="text-sm text-gray-500">({userPromotions.length})</span>
-                </div>
-                <Button 
-                  size="sm" 
-                  onClick={() => setShowAddPromo(!showAddPromo)}
-                  className="bg-black hover:bg-gray-800"
                 >
 >>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
                   <Plus className="w-4 h-4 mr-2" />
@@ -922,21 +876,6 @@ export function BusinessDashboard() {
                   })}
                 </div>
               )}
-=======
-              {showAddPromo && (
-                <div className="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-100 space-y-3">
-                  <Input placeholder="Promotion title" className="bg-white" />
-                  <Input placeholder="Discount %" type="number" className="bg-white" />
-                  <Input placeholder="End date" type="date" className="bg-white" />
-                  <Button size="sm" className="w-full bg-black hover:bg-gray-800">Save Promotion</Button>
-                </div>
-              )}
-
-              <div className="space-y-3 max-h-80 overflow-y-auto">
-                {userPromotions.map((promo) => (
-                  <div key={promo.id} className="p-4 bg-orange-50 rounded-lg border border-orange-100">
-                    <div className="flex items-start justify-between mb-2">
-                      <p className="font-semibold text-sm flex-1">{promo.title}</p>
                       <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                         {promo.discount}% OFF
                       </div>
