@@ -11,8 +11,18 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ title, productCount, image, imageAlt, backgroundColor }: CategoryCardProps) {
+  // Map category titles to actual category names in the data
+  const categoryMap: Record<string, string> = {
+    "Men's Wear": "Clothing",
+    "Kid's Fashion": "Clothing",
+    "Beauty Products": "Beauty & Personal Care",
+    "Accessories": "Sports & Outdoors"
+  };
+  
+  const categoryName = categoryMap[title] || title;
+  
   return (
-    <Link to="/categories">
+    <Link to={`/products?category=${encodeURIComponent(categoryName)}`}>
       <Card className="group overflow-hidden hover:shadow-lg transition-all cursor-pointer h-full" style={{ backgroundColor }}>
         <CardContent className="p-4 sm:p-6 flex flex-col h-full">
           <div className="mb-3 sm:mb-4">
@@ -24,7 +34,7 @@ export function CategoryCard({ title, productCount, image, imageAlt, backgroundC
             className="flex items-center gap-2 font-semibold text-sm sm:body-normal mb-4 sm:mb-6 group-hover:gap-3 transition-all"
             type="button"
           >
-            Go to Shops <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
+            Shop Now <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
            
           <div className="mt-auto">

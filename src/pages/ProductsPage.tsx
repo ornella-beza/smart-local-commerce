@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
+=======
+import { Link, useSearchParams } from 'react-router-dom';
+import { products, businesses, areas, categories } from '../data/mockData';
+>>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
 import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
@@ -32,6 +37,7 @@ interface Category {
 }
 
 export function ProductsPage() {
+<<<<<<< HEAD
   const [products, setProducts] = useState<Product[]>([]);
   const [shops, setShops] = useState<Shop[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -39,10 +45,14 @@ export function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+=======
+  const [searchParams] = useSearchParams();
+>>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedArea, setSelectedArea] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
+<<<<<<< HEAD
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,6 +81,15 @@ export function ProductsPage() {
 
     fetchData();
   }, []);
+=======
+  // Read search query from URL on mount
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    const urlCategory = searchParams.get('category');
+    if (urlSearch) setSearchTerm(urlSearch);
+    if (urlCategory) setSelectedCategory(urlCategory);
+  }, [searchParams]);
+>>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());

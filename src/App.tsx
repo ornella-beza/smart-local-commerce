@@ -19,6 +19,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { PromotionDetailPage } from './pages/PromotionDetailPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogDetailPage } from './pages/BlogDetailPage';
+import { SearchResultsPage } from './pages/SearchResultsPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { BusinessDashboard } from './pages/BusinessDashboard';
 
@@ -66,6 +67,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           
           <Route path="/" element={<Layout><HomePage /></Layout>} />
+          <Route path="/search" element={<Layout><SearchResultsPage /></Layout>} />
           <Route path="/shops" element={<Layout><ShopsPage /></Layout>} />
           <Route path="/shop/:id" element={<Layout><ShopDetailPage /></Layout>} />
           <Route path="/products" element={<Layout><ProductsPage /></Layout>} />

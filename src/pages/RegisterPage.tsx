@@ -4,14 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
-import { Home, Mail, Lock, User, Briefcase, ShoppingBag } from 'lucide-react';
+import { Home, Mail, Lock, User, Briefcase, ShoppingBag, Eye, EyeOff } from 'lucide-react';
 
 export function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState<'business' | 'customer'>('customer');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,29 +75,29 @@ export function RegisterPage() {
               </div>
             </div>
             <h2 className="text-4xl font-bold leading-tight">
-              Join our growing
-              <span className="text-primary"> community</span> today
+              Grow your business with
+              <span className="text-primary"> NiceShop</span>
             </h2>
             <p className="text-lg text-muted-foreground">
-              Whether you're a customer looking for local products or a business owner ready to grow, we've got you covered.
+              Register your business and start selling to thousands of customers across Rwanda.
             </p>
             <div className="space-y-4 pt-4">
-              <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <ShoppingBag className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">For Customers</h3>
-                  <p className="text-sm text-muted-foreground">Discover local products and exclusive deals</p>
-                </div>
-              </div>
               <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
                 <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Briefcase className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">For Business Owners</h3>
-                  <p className="text-sm text-muted-foreground">Showcase your products and reach more customers</p>
+                  <p className="text-sm text-muted-foreground">Showcase products, manage inventory, track sales</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <ShoppingBag className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">No Login for Customers</h3>
+                  <p className="text-sm text-muted-foreground">Customers can browse and shop without accounts</p>
                 </div>
               </div>
             </div>
@@ -108,8 +109,8 @@ export function RegisterPage() {
           <CardContent className="p-6 sm:p-8 lg:p-12">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Create Account</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Start your journey with us</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Business Registration</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Register your business on NiceShop</p>
               </div>
               <Link to="/">
                 <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
@@ -154,13 +155,20 @@ export function RegisterPage() {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="pl-10 sm:pl-11 h-11 sm:h-12"
+                    className="pl-10 sm:pl-11 pr-10 sm:pr-11 h-11 sm:h-12"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  </button>
                 </div>
               </div>
 
@@ -169,43 +177,33 @@ export function RegisterPage() {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   <Input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="pl-10 sm:pl-11 h-11 sm:h-12"
+                    className="pl-10 sm:pl-11 pr-10 sm:pr-11 h-11 sm:h-12"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  </button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">I want to register as</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setRole('customer')}
-                    className={`p-3 sm:p-4 rounded-lg border-2 transition-all ${
-                      role === 'customer'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2" />
-                    <div className="font-semibold text-xs sm:text-sm">Customer</div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setRole('business')}
-                    className={`p-3 sm:p-4 rounded-lg border-2 transition-all ${
-                      role === 'business'
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2" />
-                    <div className="font-semibold text-xs sm:text-sm">Business</div>
-                  </button>
+                <label className="block text-sm font-semibold mb-2">Account Type</label>
+                <div className="p-4 rounded-lg border-2 border-primary bg-primary/5">
+                  <div className="flex items-center gap-3">
+                    <Briefcase className="w-6 h-6" />
+                    <div>
+                      <div className="font-semibold">Business Owner</div>
+                      <div className="text-xs text-muted-foreground">Register to sell products on NiceShop</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
