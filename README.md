@@ -236,4 +236,3 @@ Contributions are welcome! Please follow these steps:
   <p>Made with ❤️ for Rwanda's Local Commerce</p>
   <p>© 2026 NiceShop. All rights reserved.</p>
 </div>
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
