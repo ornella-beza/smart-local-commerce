@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
@@ -14,26 +15,48 @@ export function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess(false);
+    setLoading(true);
 
+    // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setLoading(false);
       return;
     }
 
-    setSuccess(true);
-    setTimeout(() => {
-      navigate('/login');
-    }, 2000);
+    if (!name.trim() || !email.trim()) {
+      setError('Please fill in all fields');
+      setLoading(false);
+      return;
+    }
+
+    // Call API to register
+    const result = await register(name, email, password, role);
+    
+    if (result.success) {
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
+    } else {
+      setError(result.error || 'Registration failed. Please try again.');
+    }
+    
+    setLoading(false);
   };
 
   return (
@@ -198,8 +221,12 @@ export function RegisterPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold">
-                Create Account
+              <Button 
+                type="submit" 
+                className="w-full h-11 sm:h-12 text-sm sm:text-base font-semibold"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
 

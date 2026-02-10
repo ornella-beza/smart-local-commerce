@@ -1,219 +1,98 @@
-<div align="center">
-  <img src="public/favicon.svg" alt="NiceShop Logo" width="120" height="120"/>
-  <h1>🛍️ NiceShop - Local Commerce Platform</h1>
-  <p><strong>Connecting Local Businesses with Customers Across Rwanda</strong></p>
-  
-  [![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Vite](https://img.shields.io/badge/Vite-7.2-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-</div>
+# Smart Local Commerce - Frontend
 
----
+Frontend application for the Smart Local Commerce Platform built with React, TypeScript, and Vite.
 
-## 📋 Table of Contents
+## Features
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [Project Structure](#-project-structure)
-- [Pages & Routes](#-pages--routes)
-- [Authentication](#-authentication)
-- [Deployment](#-deployment)
-- [Contributing](#-contributing)
-- [License](#-license)
+- Browse products by category and location
+- Search and filter products
+- View shop profiles
+- View promotions and deals
+- User authentication
+- Admin and Business Owner dashboards
+- Responsive design
 
----
+## Prerequisites
 
-## 🌟 Overview
+- Node.js (v16 or higher)
+- npm or yarn
+- Backend API running (see Backend README)
 
-NiceShop is a comprehensive local commerce platform designed for Rwanda, enabling businesses to showcase their products and customers to discover local deals. Built with modern web technologies, it features role-based dashboards, real-time promotions, and a fully responsive design.
+## Setup Instructions
 
-### 🎯 Key Highlights
-
-- 🏪 **Multi-Vendor Support** - Multiple businesses can manage their products
-- 📊 **Analytics Dashboards** - Admin and business owner dashboards with charts
-- ⚡ **Flash Sales** - Live countdown timers for promotions
-- 🎨 **Modern UI** - Gradient designs, smooth animations, and responsive layouts
-- 🔐 **Role-Based Access** - Admin, Business Owner, and Customer roles
-- 🌍 **Location-Based** - Filter by Rwanda regions (Kigali, Musanze, Rubavu, etc.)
-
----
-
-## ✨ Features
-
-### 🛒 E-Commerce Core
-- **Product Catalog** - Browse 15+ products across 7 categories
-- **Advanced Search** - Search by name, category, location, and brand
-- **Product Details** - Full product pages with images, pricing, and business info
-- **Shopping Cart** - Add to cart functionality (UI ready)
-- **Wishlist** - Save favorite products
-- **Promotions** - Active deals with discount badges and validity dates
-
-### 🏢 Business Features
-- **Shop Directory** - Browse all local businesses
-- **Shop Profiles** - Logo, description, contact info, and product listings
-- **Business Dashboard** - Manage products, promotions, and view analytics
-- **Product Management** - Add/edit products with images and pricing
-- **Promotion Management** - Create time-limited deals
-
-### 👨‍💼 Admin Features
-- **Admin Dashboard** - Platform-wide statistics and analytics
-- **Business Monitoring** - Track all registered businesses
-- **Product Oversight** - View all products across the platform
-- **Analytics Charts** - Weekly activity and category distribution
-
-### 🎨 UI/UX Features
-- **Flash Sale Section** - Animated countdown timer (days/hours/minutes/seconds)
-- **Hero Section** - Featured content banner
-- **Trending Collections** - Curated product showcases
-- **Best Sellers** - Popular products section
-- **Category Cards** - Pastel-themed category browsing
-- **Responsive Design** - Mobile-first, optimized for all screen sizes
-- **Gradient Themes** - Modern gradient backgrounds and cards
-- **Smooth Animations** - Hover effects and transitions
-
-### 🔐 Authentication & Authorization
-- **User Login** - Email/password authentication
-- **User Registration** - Sign up as Customer or Business Owner
-- **Protected Routes** - Role-based access control
-- **Mock Users** - Pre-configured test accounts
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend Framework
-- ![React](https://img.shields.io/badge/-React_19.2-61DAFB?logo=react&logoColor=white&style=flat-square) **React 19.2** - UI library
-- ![TypeScript](https://img.shields.io/badge/-TypeScript_5.9-3178C6?logo=typescript&logoColor=white&style=flat-square) **TypeScript 5.9** - Type safety
-- ![Vite](https://img.shields.io/badge/-Vite_7.2-646CFF?logo=vite&logoColor=white&style=flat-square) **Vite 7.2** - Build tool
-
-### Styling & UI
-- ![Tailwind](https://img.shields.io/badge/-Tailwind_CSS_4.1-38B2AC?logo=tailwind-css&logoColor=white&style=flat-square) **Tailwind CSS v4** - Utility-first CSS
-- ![shadcn/ui](https://img.shields.io/badge/-shadcn/ui-000000?logo=shadcnui&logoColor=white&style=flat-square) **shadcn/ui** - Component library
-- ![Lucide](https://img.shields.io/badge/-Lucide_React-F56565?logo=lucide&logoColor=white&style=flat-square) **Lucide React** - Icon library
-
-### Routing & State
-- ![React Router](https://img.shields.io/badge/-React_Router_7-CA4245?logo=react-router&logoColor=white&style=flat-square) **React Router v7** - Client-side routing
-- **Context API** - Authentication state management
-
-### Development Tools
-- **ESLint** - Code linting
-- **TypeScript ESLint** - TypeScript-specific linting
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** 20.19+ or 22.12+
-- **npm** or **yarn**
-
-### Installation
+### 1. Install Dependencies
 
 ```bash
-# Clone the repository
-git clone https://github.com/ornella-beza/smart-local-commerce.git
-cd smart-local-commerce
-
-# Install dependencies
 npm install
+```
 
-# Run development server
+### 2. Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+**Note:** If your backend is running on a different port or URL, update this accordingly.
+
+### 3. Run the Development Server
+
+```bash
 npm run dev
+```
 
-# Build for production
+The application will be available at `http://localhost:5173` (or the port shown in the terminal).
+
+### 4. Build for Production
+
+```bash
 npm run build
-
-# Preview production build
-npm run preview
 ```
 
-### Environment Setup
+The built files will be in the `dist` directory.
 
-No environment variables required - uses mock data for development.
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-smart-local-commerce/
-├── public/
-│   └── favicon.svg              # NiceShop logo
-├── src/
-│   ├── components/
-│   │   ├── ui/                  # shadcn/ui components
-│   │   │   ├── badge.tsx
-│   │   │   ├── button.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── input.tsx
-│   │   │   └── ...
-│   │   ├── BestSellersSection.tsx
-│   │   ├── CategoryCard.tsx
-│   │   ├── Charts.tsx           # Line & Bar charts
-│   │   ├── FlashSale.tsx        # Countdown timer
-│   │   ├── Footer.tsx
-│   │   ├── Header.tsx
-│   │   ├── HeroSection.tsx
-│   │   ├── Navigation.tsx
-│   │   ├── ProductCard.tsx
-│   │   ├── TopBanner.tsx
-│   │   └── TrendingSection.tsx
-│   ├── context/
-│   │   └── AuthContext.tsx      # Authentication context
-│   ├── data/
-│   │   └── mockData.ts          # Mock users, products, businesses
-│   ├── pages/
-│   │   ├── AdminDashboard.tsx
-│   │   ├── BusinessDashboard.tsx
-│   │   ├── HomePage.tsx
-│   │   ├── LoginPage.tsx
-│   │   ├── ProductDetailPage.tsx
-│   │   ├── ProductsPage.tsx
-│   │   ├── PromotionDetailPage.tsx
-│   │   ├── PromotionsPage.tsx
-│   │   ├── RegisterPage.tsx
-│   │   ├── ShopDetailPage.tsx
-│   │   └── ShopsPage.tsx
-│   ├── lib/
-│   │   └── utils.ts             # Utility functions
-│   ├── App.tsx                  # Main app with routing
-│   ├── main.tsx                 # Entry point
-│   └── index.css                # Global styles
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── vercel.json                  # Vercel deployment config
-└── README.md
+src/
+├── components/     # Reusable UI components
+├── pages/          # Page components
+├── services/       # API service utilities
+├── context/        # React context providers
+├── data/           # Mock data (being migrated to API)
+└── lib/            # Utility functions
 ```
 
----
+## API Integration
 
-## 🗺️ Pages & Routes
+The frontend now fetches data from the backend API. Make sure:
 
-| Route | Page | Access | Description |
-|-------|------|--------|-------------|
-| `/` | Home | Public | Hero, Flash Sale, Trending, Best Sellers |
-| `/login` | Login | Public | User authentication |
-| `/register` | Register | Public | User registration |
-| `/shops` | Shops | Public | Browse all businesses |
-| `/shop/:id` | Shop Detail | Public | Individual shop page |
-| `/products` | Products | Public | Product catalog with filters |
-| `/product/:id` | Product Detail | Public | Individual product page |
-| `/promotions` | Promotions | Public | Active deals and discounts |
-| `/promotion/:id` | Promotion Detail | Public | Individual promotion page |
-| `/admin/dashboard` | Admin Dashboard | Admin Only | Platform analytics |
-| `/business/dashboard` | Business Dashboard | Business Only | Product/promotion management |
+1. The backend server is running
+2. The `VITE_API_URL` in `.env` points to your backend API
+3. MongoDB is seeded with data (run `npm run seed` in the backend)
 
----
+## Available Scripts
 
-## 🔐 Authentication
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
+<<<<<<< HEAD
+## Technologies Used
+
+- **React** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **React Router** - Routing
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
+
+## License
+
+ISC
+=======
 ### User Roles
 
 **NiceShop has two types of authenticated users:**
@@ -357,3 +236,4 @@ Contributions are welcome! Please follow these steps:
   <p>Made with ❤️ for Rwanda's Local Commerce</p>
   <p>© 2026 NiceShop. All rights reserved.</p>
 </div>
+>>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2

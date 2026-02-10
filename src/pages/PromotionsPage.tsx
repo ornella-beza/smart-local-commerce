@@ -1,16 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { promotions, businesses, areas } from '../data/mockData';
+import { api } from '../services/api';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { MapPin, Calendar } from 'lucide-react';
 
+interface Promotion {
+  _id: string;
+  title: string;
+  description: string;
+  discountValue: number;
+  discountType: 'percentage' | 'fixed';
+  bannerImage?: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  shop?: { _id: string; name: string; location: string } | string;
+  isActive: boolean;
+}
+
+interface Shop {
+  _id: string;
+  name: string;
+  location: string;
+}
+
 export function PromotionsPage() {
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [areas, setAreas] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedArea, setSelectedArea] = useState('');
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [promotionsData, shopsData] = await Promise.all([
+          api.getActivePromotions(),
+          api.getShops(),
+        ]);
+
+        setPromotions(promotionsData);
+        setShops(shopsData);
+        
+        // Extract unique areas from promotions
+        const uniqueAreas = [...new Set(promotionsData.map((p: Promotion) => p.location))];
+        setAreas(uniqueAreas);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load promotions');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const filteredPromotions = promotions.filter((promo) => {
-    return !selectedArea || promo.area === selectedArea;
+    return !selectedArea || promo.location === selectedArea;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading promotions...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,20 +98,26 @@ export function PromotionsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {filteredPromotions.map((promo) => {
-            const business = businesses.find((b) => b.id === promo.businessId);
+            const shop = typeof promo.shop === 'object' ? promo.shop : shops.find(s => s._id === promo.shop);
+            const discountText = promo.discountType === 'percentage' 
+              ? `${promo.discountValue}% OFF` 
+              : `RWF ${promo.discountValue} OFF`;
+            
             return (
-              <Link to={`/promotion/${promo.id}`} key={promo.id}>
+              <Link to={`/promotion/${promo._id}`} key={promo._id}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <img
-                    src={promo.image}
-                    alt={promo.title}
-                    className="w-full h-40 sm:h-48 object-cover"
-                  />
+                  {promo.bannerImage && (
+                    <img
+                      src={promo.bannerImage}
+                      alt={promo.title}
+                      className="w-full h-40 sm:h-48 object-cover"
+                    />
+                  )}
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
                       <h3 className="font-bold text-lg sm:text-xl flex-1">{promo.title}</h3>
                       <Badge className="bg-destructive text-white text-xs sm:text-sm flex-shrink-0">
-                        {promo.discount}% OFF
+                        {discountText}
                       </Badge>
                     </div>
                     
@@ -54,14 +126,14 @@ export function PromotionsPage() {
                     <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        <span>{promo.area}</span>
+                        <span>{promo.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         <span>Valid until {new Date(promo.endDate).toLocaleDateString()}</span>
                       </div>
-                      {business && (
-                        <p className="font-semibold mt-2 text-sm sm:text-base">By {business.name}</p>
+                      {shop && (
+                        <p className="font-semibold mt-2 text-sm sm:text-base">By {shop.name}</p>
                       )}
                     </div>
                   </CardContent>

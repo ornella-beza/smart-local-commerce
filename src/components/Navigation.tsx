@@ -1,14 +1,39 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, LogOut } from 'lucide-react';
+import { ChevronDown, LogOut, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { Button } from './ui/button';
-import { categories } from '../data/mockData';
-import { useState } from 'react';
+import { api } from '../services/api';
+import { useState, useEffect } from 'react';
 
 export function Navigation() {
   const { user, isAuthenticated, logout } = useAuth();
+  const { itemCount } = useCart();
   const navigate = useNavigate();
+  
+  // Safely get itemCount, default to 0 if cart context fails
+  const cartItemCount = itemCount || 0;
   const [showCategories, setShowCategories] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await api.getCategories();
+        const categoryNames = data.map((cat: any) => cat.name);
+        setCategories(categoryNames);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+        // Fallback to empty array if API fails
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -41,6 +66,25 @@ export function Navigation() {
                       <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                     {showCategories && (
+<<<<<<< HEAD
+                      <div className="absolute top-full left-0 mt-2 bg-white text-foreground rounded-lg shadow-lg py-2 min-w-[200px] z-50">
+                        {loading ? (
+                          <div className="px-4 py-2 text-sm text-muted-foreground">Loading...</div>
+                        ) : categories.length > 0 ? (
+                          categories.map((cat) => (
+                            <Link
+                              key={cat}
+                              to={`/products?category=${encodeURIComponent(cat)}`}
+                              className="block px-4 py-2 hover:bg-muted text-sm"
+                            >
+                              {cat}
+                            </Link>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-sm text-muted-foreground">No categories available</div>
+                        )}
+                      </div>
+=======
                       <>
                         <div 
                           className="fixed inset-0 z-40" 
@@ -59,6 +103,7 @@ export function Navigation() {
                           ))}
                         </div>
                       </>
+>>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
                     )}
                   </div>
                 ) : (
@@ -71,6 +116,17 @@ export function Navigation() {
           </ul>
           
           <div className="hidden md:flex items-center gap-4">
+            <Link
+              to="/cart"
+              className="relative hover:text-primary-foreground/80 transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
+                </span>
+              )}
+            </Link>
             {isAuthenticated && (
               <>
                 {user?.role === 'admin' && (
@@ -78,7 +134,7 @@ export function Navigation() {
                     Admin Dashboard
                   </Link>
                 )}
-                {user?.role === 'business' && (
+                {(user?.role === 'business' || user?.role === 'business_owner') && (
                   <Link to="/business/dashboard" className="hover:text-primary-foreground/80 transition-colors body-normal whitespace-nowrap">
                     My Dashboard
                   </Link>
@@ -94,6 +150,21 @@ export function Navigation() {
                 </Button>
               </>
             )}
+          </div>
+
+          {/* Mobile Cart Icon */}
+          <div className="md:hidden flex items-center">
+            <Link
+              to="/cart"
+              className="relative p-2 hover:text-primary-foreground/80 transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
       </div>
