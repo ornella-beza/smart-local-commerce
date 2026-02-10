@@ -128,7 +128,6 @@ export function AddPromotionModal({ isOpen, onClose, onSuccess }: AddPromotionMo
       // Validate dates
       const startDate = new Date(formData.startDate);
       const endDate = new Date(formData.endDate);
-      const now = new Date();
       
       if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
         setError('Please enter valid dates');

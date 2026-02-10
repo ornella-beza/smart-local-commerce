@@ -3,9 +3,22 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem('token');
   
-  const headers: HeadersInit = {
-    ...options.headers,
-  };
+  const headers: Record<string, string> = {};
+
+  // Copy existing headers if they exist
+  if (options.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
 
   // Only set Content-Type if it's not FormData (browser will set it automatically for FormData)
   if (!(options.body instanceof FormData)) {
@@ -288,6 +301,12 @@ export const api = {
     });
   },
   deleteCategory: (id: string) => fetchAPI(`/categories/${id}`, { method: 'DELETE' }),
+
+  // Shop deletion
+  deleteShop: (id: string) => fetchAPI(`/shops/${id}`, { method: 'DELETE' }),
+
+  // Promotion deletion
+  deletePromotion: (id: string) => fetchAPI(`/promotions/${id}`, { method: 'DELETE' }),
 
   // Cart
   getCart: () => fetchAPI('/cart'),

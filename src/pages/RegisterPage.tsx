@@ -44,8 +44,11 @@ export function RegisterPage() {
       return;
     }
 
+    // Determine role based on user selection (if any)
+    const userRole = 'customer'; // Default to customer, can be changed based on UI
+    
     // Call API to register
-    const result = await register(name, email, password, role);
+    const result = await register(name, email, password, userRole);
     
     if (result.success) {
       setSuccess(true);
