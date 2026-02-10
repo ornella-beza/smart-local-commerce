@@ -70,7 +70,7 @@ export function ProductCard({
     
     return stars;
   };
-
+//status of github
   const getBadgeClassName = () => {
     if (!badge?.variant) return 'bg-primary text-primary-foreground';
     
