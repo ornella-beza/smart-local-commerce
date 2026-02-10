@@ -113,7 +113,7 @@ export function Navigation() {
                     Admin Dashboard
                   </Link>
                 )}
-                {(user?.role === 'business' || user?.role === 'business_owner') && (
+                {user?.role === 'business_owner' && (
                   <Link to="/business/dashboard" className="hover:text-primary-foreground/80 transition-colors body-normal whitespace-nowrap">
                     My Dashboard
                   </Link>

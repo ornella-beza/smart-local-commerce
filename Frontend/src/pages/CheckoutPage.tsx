@@ -6,7 +6,7 @@ import { api } from '../services/api';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { ArrowLeft, CheckCircle2, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export function CheckoutPage() {
   const { cart, loading, clearCart, totalAmount } = useCart();

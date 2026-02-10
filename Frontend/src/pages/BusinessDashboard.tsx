@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { BusinessLayout } from '../components/BusinessLayout';
@@ -18,9 +18,7 @@ import {
   Plus, 
   Edit, 
   Trash2,
-  TrendingUp,
-  DollarSign,
-  ShoppingBag
+  DollarSign
 } from 'lucide-react';
 import { StatCard, EnhancedBarChart as BarChart, PieChart } from '../components/EnhancedCharts';
 
@@ -29,6 +27,7 @@ interface Shop {
   name: string;
   email: string;
   location: string;
+  telephone?: string;
   description?: string;
   image?: string;
 }
@@ -43,6 +42,8 @@ interface Product {
   category: { _id: string; name: string } | string;
   shop?: { _id: string; name: string } | string;
   stock?: number;
+  seller?: string;
+  location?: string;
 }
 
 interface Promotion {
@@ -60,7 +61,6 @@ interface Promotion {
 export function BusinessDashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   
   // Determine active section from URL
   const getActiveSectionFromPath = (): 'dashboard' | 'shops' | 'products' | 'promotions' => {
@@ -686,7 +686,12 @@ export function BusinessDashboard() {
             fetchData();
             setTimeout(() => setSuccessMessage(null), 3000);
           }}
-          product={editingProduct}
+          product={editingProduct ? {
+            ...editingProduct,
+            seller: editingProduct.seller || '',
+            location: editingProduct.location || '',
+            description: editingProduct.description || '',
+          } : null}
         />
       )}
 
@@ -715,7 +720,12 @@ export function BusinessDashboard() {
             fetchData();
             setTimeout(() => setSuccessMessage(null), 3000);
           }}
-          shop={editingShop}
+          shop={editingShop ? {
+            ...editingShop,
+            telephone: editingShop.telephone || '',
+            email: editingShop.email || '',
+            description: editingShop.description || '',
+          } : null}
         />
       )}
 
