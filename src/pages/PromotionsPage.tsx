@@ -46,7 +46,8 @@ export function PromotionsPage() {
         setShops(shopsData);
         
         // Extract unique areas from promotions
-        const uniqueAreas = [...new Set(promotionsData.map((p: Promotion) => p.location))];
+        const promotionsArray = Array.isArray(promotionsData) ? promotionsData as Promotion[] : [];
+        const uniqueAreas = [...new Set(promotionsArray.map((p: Promotion) => p.location))];
         setAreas(uniqueAreas);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load promotions');

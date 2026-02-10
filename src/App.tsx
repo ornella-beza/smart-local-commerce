@@ -33,7 +33,7 @@ function ProtectedRoute({ children, role }: { children: React.ReactNode; role?: 
   if (role) {
     // Handle business role - allow both 'business' and 'business_owner'
     if (role === 'business') {
-      if (user?.role !== 'business' && user?.role !== 'business_owner') {
+      if (user?.role !== 'business_owner') {
         return <Navigate to="/" />;
       }
     } else if (user?.role !== role) {

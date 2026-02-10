@@ -9,18 +9,13 @@ import { AddPromotionModal } from '../components/AddPromotionModal';
 import { AddCategoryModal } from '../components/AddCategoryModal';
 import { EditCategoryModal } from '../components/EditCategoryModal';
 import { api } from '../services/api';
-import { Card, CardContent } from '../components/ui/card';
+import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import {
   Store,
   Package,
   Tag,
-  Users,
-  TrendingUp,
-  DollarSign,
-  ArrowUp,
   Activity,
-  ShoppingBag,
 } from 'lucide-react';
 import {
   EnhancedBarChart,
@@ -36,6 +31,7 @@ interface Shop {
   location: string;
   email?: string;
   telephone?: string;
+  description?: string;
 }
 
 interface Product {
@@ -46,6 +42,10 @@ interface Product {
   image?: string;
   stock?: number;
   shop?: Shop | string;
+  seller?: string;
+  location?: string;
+  description?: string;
+  originalPrice?: number;
 }
 
 interface Promotion {
@@ -122,8 +122,6 @@ function DashboardOverview() {
   }
 
   // Calculate statistics
-  const totalRevenue = products.reduce((sum, p) => sum + p.price, 0);
-  const avgProductPrice = products.length > 0 ? totalRevenue / products.length : 0;
   const lowStockProducts = products.filter((p) => (p.stock || 0) < 10).length;
 
   // Category distribution
@@ -548,7 +546,12 @@ function ShopsPage() {
             fetchShops();
           }, 500);
         }}
-        shop={selectedShop}
+        shop={selectedShop ? {
+          ...selectedShop,
+          telephone: selectedShop.telephone || '',
+          email: selectedShop.email || '',
+          description: selectedShop.description || '',
+        } : null}
       />
     </div>
   );
@@ -764,7 +767,12 @@ function ProductsPage() {
             fetchProducts();
           }, 500);
         }}
-        product={selectedProduct}
+        product={selectedProduct ? {
+          ...selectedProduct,
+          seller: selectedProduct.seller || '',
+          location: selectedProduct.location || '',
+          description: selectedProduct.description || '',
+        } : null}
       />
     </div>
   );
@@ -915,16 +923,6 @@ function CategoriesPage() {
         ) : (
           categories.map((category) => (
             <Card key={category._id} className="p-6 hover:shadow-lg transition-shadow">
-              {category.image && (
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-32 object-cover rounded-lg mb-4"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              )}
               <h3 className="font-bold text-lg mb-2">{category.name}</h3>
               {category.description && <p className="text-sm text-gray-600 mb-4">{category.description}</p>}
               <div className="flex gap-2">

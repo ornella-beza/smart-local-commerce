@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
 
