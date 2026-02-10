@@ -79,22 +79,8 @@ export function BusinessDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-=======
-import { Input } from '../components/ui/input';
-import { Package, Tag, Plus, Calendar, ChevronDown, FileText, FileSpreadsheet, File } from 'lucide-react';
-import { BarChart, LineChart } from '../components/Charts';
-
-export function BusinessDashboard() {
-  const { user } = useAuth();
-  const [showAddProduct, setShowAddProduct] = useState(false);
-  const [showAddPromo, setShowAddPromo] = useState(false);
-  const [dateRange, setDateRange] = useState('This Month');
-  const [selectedService, setSelectedService] = useState('All');
-  const [selectedPost, setSelectedPost] = useState('All');
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
 
   // Modal states
-  const [showAddProduct, setShowAddProduct] = useState(false);
   const [showEditProduct, setShowEditProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddShop, setShowAddShop] = useState(false);

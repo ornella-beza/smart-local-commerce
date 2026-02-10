@@ -79,7 +79,6 @@ The frontend now fetches data from the backend API. Make sure:
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
 
-<<<<<<< HEAD
 ## Technologies Used
 
 - **React** - UI library
@@ -92,7 +91,8 @@ The frontend now fetches data from the backend API. Make sure:
 ## License
 
 ISC
-=======
+
+---
 ### User Roles
 
 **NiceShop has two types of authenticated users:**

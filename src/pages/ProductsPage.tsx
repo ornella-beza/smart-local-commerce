@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { Link } from 'react-router-dom';
-import { api } from '../services/api';
-=======
 import { Link, useSearchParams } from 'react-router-dom';
-import { products, businesses, areas, categories } from '../data/mockData';
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
+import { api } from '../services/api';
 import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
@@ -37,7 +32,7 @@ interface Category {
 }
 
 export function ProductsPage() {
-<<<<<<< HEAD
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [shops, setShops] = useState<Shop[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,14 +40,18 @@ export function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-=======
-  const [searchParams] = useSearchParams();
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedArea, setSelectedArea] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-<<<<<<< HEAD
+  // Read search query from URL on mount
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    const urlCategory = searchParams.get('category');
+    if (urlSearch) setSearchTerm(urlSearch);
+    if (urlCategory) setSelectedCategory(urlCategory);
+  }, [searchParams]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -64,12 +63,15 @@ export function ProductsPage() {
         ]);
 
         // Ensure we have arrays even if API returns undefined
-        setProducts(Array.isArray(productsData) ? productsData : []);
-        setShops(Array.isArray(shopsData) ? shopsData : []);
-        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        const productsArray = Array.isArray(productsData) ? productsData as Product[] : [];
+        const shopsArray = Array.isArray(shopsData) ? shopsData as Shop[] : [];
+        const categoriesArray = Array.isArray(categoriesData) ? categoriesData as Category[] : [];
+        
+        setProducts(productsArray);
+        setShops(shopsArray);
+        setCategories(categoriesArray);
         
         // Extract unique areas from shops
-        const shopsArray = Array.isArray(shopsData) ? shopsData : [];
         const uniqueAreas = [...new Set(shopsArray.map((shop: Shop) => shop.location))];
         setAreas(uniqueAreas);
       } catch (err) {
@@ -81,15 +83,6 @@ export function ProductsPage() {
 
     fetchData();
   }, []);
-=======
-  // Read search query from URL on mount
-  useEffect(() => {
-    const urlSearch = searchParams.get('search');
-    const urlCategory = searchParams.get('category');
-    if (urlSearch) setSearchTerm(urlSearch);
-    if (urlCategory) setSelectedCategory(urlCategory);
-  }, [searchParams]);
->>>>>>> ef4649c2d4c28ecf93063332a498517e3d9fd0f2
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
