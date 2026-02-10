@@ -50,11 +50,11 @@ export function LoginPage() {
             </p>
             <div className="space-y-3 pt-4">
               <div className="p-4 bg-white rounded-xl shadow-sm">
-                <div className="font-bold text-lg mb-1">👨‍💼 Admin Dashboard</div>
+                <div className="font-bold text-lg mb-1">Admin Dashboard</div>
                 <div className="text-sm text-muted-foreground">Full platform control, monitor all businesses, view analytics</div>
               </div>
               <div className="p-4 bg-white rounded-xl shadow-sm">
-                <div className="font-bold text-lg mb-1">🏪 Business Dashboard</div>
+                <div className="font-bold text-lg mb-1">Business Dashboard</div>
                 <div className="text-sm text-muted-foreground">Manage your products, promotions, and sales</div>
               </div>
             </div>
