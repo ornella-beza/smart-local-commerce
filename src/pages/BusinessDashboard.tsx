@@ -622,24 +622,6 @@ export function BusinessDashboard() {
                   })}
                 </div>
               )}
-<<<<<<< HEAD
-=======
-
-              <div className="space-y-3 max-h-80 overflow-y-auto">
-                {userPromotions.map((promo) => (
-                  <div key={promo.id} className="p-4 bg-orange-40 rounded-lg border border-orange-100">
-                    <div className="flex items-start justify-between mb-2">
-                      <p className="font-semibold text-sm flex-1">{promo.title}</p>
-                      <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        {promo.discount}% OFF
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">{promo.description}</p>
-                    <p className="text-xs text-gray-500">Valid until {new Date(promo.endDate).toLocaleDateString()}</p>
-                  </div>
-                ))}
-              </div>
->>>>>>> 6ed1129 (comment)
             </CardContent>
           </Card>
           )}
