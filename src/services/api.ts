@@ -82,17 +82,15 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   } catch (error: any) {
     // Handle network errors gracefully
     if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+      console.warn(`Cannot connect to backend server at ${API_BASE_URL}`);
+      
       // For GET requests, return empty array instead of throwing
-      // This prevents the app from crashing when backend is not running
       if (!options.method || options.method === 'GET') {
-        console.warn(`Cannot connect to backend server at ${API_BASE_URL}. Returning empty array.`);
         return [];
       }
-      // For POST/PUT/DELETE, throw error as these operations need the backend
-      throw new Error(
-        `Cannot connect to backend server at ${API_BASE_URL}. ` +
-        `Please make sure the backend server is running on port 3000.`
-      );
+      
+      // For POST/PUT/DELETE, throw a user-friendly error
+      throw new Error('Unable to connect to server. Please check your internet connection and try again.');
     }
     throw error;
   }

@@ -13,7 +13,7 @@ interface Product {
   originalPrice?: number;
   description?: string;
   image?: string;
-  category: { _id: string; name: string } | string;
+  category: { _id: string; name: string } | string | null;
   shop?: { _id: string; name: string; location: string; image?: string } | string;
   location: string;
   stock?: number;
@@ -44,7 +44,6 @@ export function ProductsPage() {
   const [selectedArea, setSelectedArea] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Read search query from URL on mount
   useEffect(() => {
     const urlSearch = searchParams.get('search');
     const urlCategory = searchParams.get('category');
@@ -62,7 +61,6 @@ export function ProductsPage() {
           api.getCategories(),
         ]);
 
-        // Ensure we have arrays even if API returns undefined
         const productsArray = Array.isArray(productsData) ? productsData as Product[] : [];
         const shopsArray = Array.isArray(shopsData) ? shopsData as Shop[] : [];
         const categoriesArray = Array.isArray(categoriesData) ? categoriesData as Category[] : [];
@@ -71,7 +69,6 @@ export function ProductsPage() {
         setShops(shopsArray);
         setCategories(categoriesArray);
         
-        // Extract unique areas from shops
         const uniqueAreas = [...new Set(shopsArray.map((shop: Shop) => shop.location))];
         setAreas(uniqueAreas);
       } catch (err) {
@@ -90,7 +87,7 @@ export function ProductsPage() {
     const productLocation = productShop?.location || product.location;
     const matchesArea = !selectedArea || productLocation === selectedArea;
     
-    const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
+    const productCategory = typeof product.category === 'object' && product.category ? product.category.name : product.category;
     const categoryName = typeof productCategory === 'string' ? productCategory : '';
     const matchesCategory = !selectedCategory || categoryName === selectedCategory;
     
@@ -165,74 +162,83 @@ export function ProductsPage() {
           </select>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {filteredProducts.map((product, index) => {
-            const productShop = typeof product.shop === 'object' ? product.shop : shops.find(s => s._id === product.shop);
-            const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
-            const categoryName = typeof productCategory === 'string' ? productCategory : '';
-            
-            return (
-              <Link 
-                to={`/product/${product._id}`} 
-                key={product._id}
-                className="product-card"
-                style={{ animationDelay: `${Math.min(index * 0.05, 0.5)}s` }}
-              >
-                <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-md h-full flex flex-col">
-                  <CardContent className="p-3 sm:p-4 flex flex-col flex-1">
-                    <div className="relative overflow-hidden rounded-lg mb-2 sm:mb-3">
-                      <img
-                        src={product.image || '/placeholder-image.jpg'}
-                        alt={product.name}
-                        className="w-full h-32 sm:h-40 md:h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            parent.innerHTML = '<div class="w-full h-32 sm:h-40 md:h-48 bg-muted flex items-center justify-center text-muted-foreground text-xs">No Image</div>';
-                          }
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    
-                    <Badge className="mb-1 sm:mb-2 text-[10px] sm:text-xs w-fit transition-colors group-hover:bg-primary">{categoryName}</Badge>
-                    
-                    <h3 className="font-semibold text-xs sm:text-sm mb-1 sm:mb-2 line-clamp-2 transition-colors group-hover:text-primary flex-1">{product.name}</h3>
-                    
-                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2 sm:mb-3">
-                      <span className="font-bold text-sm sm:text-base md:text-lg text-primary transition-transform group-hover:scale-105">RWF {product.price.toLocaleString()}</span>
-                      {product.originalPrice && (
-                        <span className="text-muted-foreground line-through text-[10px] sm:text-xs md:text-sm">
-                          RWF {product.originalPrice.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="space-y-0.5 sm:space-y-1 text-[10px] sm:text-xs text-muted-foreground mt-auto">
-                      {productShop && (
-                        <div className="flex items-center gap-1 transition-colors group-hover:text-foreground">
-                          <Store className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                          <span className="hover:underline">{productShop.name}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-1 transition-colors group-hover:text-foreground">
-                        <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                        <span>{product.location}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
-
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-8 sm:py-12 col-span-full">
-            <p className="text-sm sm:text-base text-muted-foreground">No products found matching your criteria</p>
+        {products.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-lg text-muted-foreground mb-4">No products in database</p>
+            <p className="text-sm text-muted-foreground">Add some products to get started</p>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+              {filteredProducts.map((product, index) => {
+                const productShop = typeof product.shop === 'object' ? product.shop : shops.find(s => s._id === product.shop);
+                const productCategory = typeof product.category === 'object' && product.category ? product.category.name : product.category;
+                const categoryName = typeof productCategory === 'string' ? productCategory : 'Uncategorized';
+                
+                return (
+                  <Link 
+                    to={`/product/${product._id}`} 
+                    key={product._id}
+                    className="product-card"
+                    style={{ animationDelay: `${Math.min(index * 0.05, 0.5)}s` }}
+                  >
+                    <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-md h-full flex flex-col">
+                      <CardContent className="p-3 sm:p-4 flex flex-col flex-1">
+                        <div className="relative overflow-hidden rounded-lg mb-2 sm:mb-3">
+                          <img
+                            src={product.image || '/placeholder-image.jpg'}
+                            alt={product.name}
+                            className="w-full h-32 sm:h-40 md:h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = '<div class="w-full h-32 sm:h-40 md:h-48 bg-muted flex items-center justify-center text-muted-foreground text-xs">No Image</div>';
+                              }
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                        
+                        <Badge className="mb-1 sm:mb-2 text-[10px] sm:text-xs w-fit transition-colors group-hover:bg-primary">{categoryName}</Badge>
+                        
+                        <h3 className="font-semibold text-xs sm:text-sm mb-1 sm:mb-2 line-clamp-2 transition-colors group-hover:text-primary flex-1">{product.name}</h3>
+                        
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2 sm:mb-3">
+                          <span className="font-bold text-sm sm:text-base md:text-lg text-primary transition-transform group-hover:scale-105">RWF {product.price.toLocaleString()}</span>
+                          {product.originalPrice && (
+                            <span className="text-muted-foreground line-through text-[10px] sm:text-xs md:text-sm">
+                              RWF {product.originalPrice.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="space-y-0.5 sm:space-y-1 text-[10px] sm:text-xs text-muted-foreground mt-auto">
+                          {productShop && (
+                            <div className="flex items-center gap-1 transition-colors group-hover:text-foreground">
+                              <Store className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                              <span className="hover:underline">{productShop.name}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-1 transition-colors group-hover:text-foreground">
+                            <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                            <span>{product.location}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-sm sm:text-base text-muted-foreground">No products found matching your criteria</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
