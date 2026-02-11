@@ -38,7 +38,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +54,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const cartData = await api.getCart();
       setCart(cartData);
     } catch (error: any) {
+      // Handle token expiration
+      if (error.message?.includes('Token expired') || error.message?.includes('Invalid token')) {
+        console.warn('Token expired or invalid, logging out');
+        logout();
+      }
       // Silently handle cart fetch errors - user might not have a cart yet
       console.error('Failed to fetch cart:', error);
       setCart(null);
@@ -135,8 +140,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const itemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
-  const totalAmount = cart?.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) || 0;
+  const itemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const totalAmount = cart?.items?.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) || 0;
 
   return (
     <CartContext.Provider

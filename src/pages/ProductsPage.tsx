@@ -63,7 +63,9 @@ export function ProductsPage() {
         ]);
 
         // Ensure we have arrays even if API returns undefined
-        const productsArray = Array.isArray(productsData) ? productsData as Product[] : [];
+        const productsArray = Array.isArray(productsData) 
+          ? (productsData as Product[]).filter(p => p !== null && p !== undefined && p.name)
+          : [];
         const shopsArray = Array.isArray(shopsData) ? shopsData as Shop[] : [];
         const categoriesArray = Array.isArray(categoriesData) ? categoriesData as Category[] : [];
         
@@ -85,13 +87,20 @@ export function ProductsPage() {
   }, []);
 
   const filteredProducts = products.filter((product) => {
+    // Skip products with null/undefined name
+    if (!product || !product.name) return false;
+    
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const productShop = typeof product.shop === 'object' ? product.shop : shops.find(s => s._id === product.shop);
+    const productShop = typeof product.shop === 'object' && product.shop !== null ? product.shop : shops.find(s => s._id === product.shop);
     const productLocation = productShop?.location || product.location;
     const matchesArea = !selectedArea || productLocation === selectedArea;
     
-    const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
-    const categoryName = typeof productCategory === 'string' ? productCategory : '';
+    const productCategory = typeof product.category === 'object' && product.category !== null 
+      ? product.category.name 
+      : product.category;
+    const categoryName = typeof productCategory === 'string' && productCategory 
+      ? productCategory 
+      : '';
     const matchesCategory = !selectedCategory || categoryName === selectedCategory;
     
     return matchesSearch && matchesArea && matchesCategory;
@@ -167,9 +176,15 @@ export function ProductsPage() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {filteredProducts.map((product, index) => {
-            const productShop = typeof product.shop === 'object' ? product.shop : shops.find(s => s._id === product.shop);
-            const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
-            const categoryName = typeof productCategory === 'string' ? productCategory : '';
+            const productShop = typeof product.shop === 'object' && product.shop !== null 
+              ? product.shop 
+              : shops.find(s => s._id === product.shop);
+            const productCategory = typeof product.category === 'object' && product.category !== null 
+              ? product.category.name 
+              : product.category;
+            const categoryName = typeof productCategory === 'string' && productCategory 
+              ? productCategory 
+              : '';
             
             return (
               <Link 
