@@ -20,11 +20,16 @@ export function BestSellersSection() {
     const fetchProducts = async () => {
       try {
         const data = await api.getProducts();
-        // Get first 4 products as best sellers (or you could sort by popularity/stock)
-        const bestSellers = data.slice(0, 4);
+        // Filter out any null/undefined products and get first 4 products as best sellers
+        const validProducts = (Array.isArray(data) ? data : []).filter(
+          (product: Product | null | undefined): product is Product => 
+            product !== null && product !== undefined && product.name !== undefined
+        );
+        const bestSellers = validProducts.slice(0, 4);
         setProducts(bestSellers);
       } catch (error) {
         console.error('Failed to fetch products:', error);
+        setProducts([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
@@ -68,8 +73,12 @@ export function BestSellersSection() {
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {products.map((product, index) => {
-            const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
-            const categoryName = typeof productCategory === 'string' ? productCategory : 'BEST SELLERS';
+            const productCategory = typeof product.category === 'object' && product.category !== null 
+              ? product.category.name 
+              : product.category;
+            const categoryName = typeof productCategory === 'string' && productCategory 
+              ? productCategory 
+              : 'BEST SELLERS';
             const hasDiscount = product.originalPrice && product.originalPrice > product.price;
             const discountPercent = hasDiscount 
               ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)

@@ -79,9 +79,14 @@ function DashboardOverview() {
           api.getPromotions(),
         ]);
 
-        setShops(shopsData);
-        setProducts(productsData);
-        setPromotions(promotionsData);
+        // Filter out null/undefined items and ensure arrays
+        const validShops = Array.isArray(shopsData) ? shopsData.filter(s => s !== null && s !== undefined) : [];
+        const validProducts = Array.isArray(productsData) ? productsData.filter(p => p !== null && p !== undefined) : [];
+        const validPromotions = Array.isArray(promotionsData) ? promotionsData.filter(pr => pr !== null && pr !== undefined) : [];
+        
+        setShops(validShops);
+        setProducts(validProducts);
+        setPromotions(validPromotions);
       } catch (error: any) {
         console.error('Failed to fetch dashboard data:', error);
         setError(error.message || 'Failed to fetch dashboard data. Please make sure the backend server is running.');
@@ -125,8 +130,12 @@ function DashboardOverview() {
   const lowStockProducts = products.filter((p) => (p.stock || 0) < 10).length;
 
   // Category distribution
-  const categoryData = products.reduce((acc: { label: string; value: number; color: string }[], product) => {
-    const categoryName = typeof product.category === 'object' ? product.category.name : 'Unknown';
+  const categoryData = products
+    .filter((product) => product !== null && product !== undefined)
+    .reduce((acc: { label: string; value: number; color: string }[], product) => {
+      const categoryName = typeof product.category === 'object' && product.category !== null
+        ? product.category.name
+        : (typeof product.category === 'string' ? product.category : 'Unknown');
     const existing = acc.find((item) => item.label === categoryName);
     if (existing) {
       existing.value++;
@@ -153,13 +162,17 @@ function DashboardOverview() {
   ];
 
   // Top shops by products
-  const shopProductCount = shops.map((shop) => {
-    const count = products.filter((p) => {
-      const shopId = typeof p.shop === 'object' ? p.shop._id : p.shop;
-      return shopId === shop._id;
-    }).length;
-    return { label: shop.name, value: count, color: '#3b82f6' };
-  }).filter((s) => s.value > 0);
+  const shopProductCount = shops
+    .filter((shop) => shop !== null && shop !== undefined && shop.name)
+    .map((shop) => {
+      const count = products.filter((p) => {
+        if (!p || !p.shop) return false;
+        const shopId = typeof p.shop === 'object' && p.shop !== null ? p.shop._id : p.shop;
+        return shopId === shop._id;
+      }).length;
+      return { label: shop.name, value: count, color: '#3b82f6' };
+    })
+    .filter((s) => s.value > 0);
 
   return (
     <div className="space-y-6">
@@ -263,8 +276,11 @@ function AnalyticsPage() {
           api.getProducts(),
           api.getShops(),
         ]);
-        setProducts(productsData);
-        setShops(shopsData);
+        // Filter out null/undefined items
+        const validProducts = Array.isArray(productsData) ? productsData.filter(p => p !== null && p !== undefined) : [];
+        const validShops = Array.isArray(shopsData) ? shopsData.filter(s => s !== null && s !== undefined) : [];
+        setProducts(validProducts);
+        setShops(validShops);
       } catch (error) {
         console.error('Failed to fetch analytics data:', error);
       } finally {
@@ -279,8 +295,12 @@ function AnalyticsPage() {
   }
 
   // Category distribution
-  const categoryData = products.reduce((acc: { label: string; value: number; color: string }[], product) => {
-    const categoryName = typeof product.category === 'object' ? product.category.name : 'Unknown';
+  const categoryData = products
+    .filter((product) => product !== null && product !== undefined)
+    .reduce((acc: { label: string; value: number; color: string }[], product) => {
+      const categoryName = typeof product.category === 'object' && product.category !== null
+        ? product.category.name
+        : (typeof product.category === 'string' ? product.category : 'Unknown');
     const existing = acc.find((item) => item.label === categoryName);
     if (existing) {
       existing.value++;
@@ -628,8 +648,12 @@ function ProductsPage() {
                   </td>
                 </tr>
               ) : (
-                products.map((product) => {
-                  const categoryName = typeof product.category === 'object' ? product.category.name : 'Unknown';
+                products
+                  .filter((product) => product !== null && product !== undefined && product.name)
+                  .map((product) => {
+                    const categoryName = typeof product.category === 'object' && product.category !== null
+                      ? product.category.name
+                      : (typeof product.category === 'string' ? product.category : 'Unknown');
                   return (
                     <tr key={product._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">

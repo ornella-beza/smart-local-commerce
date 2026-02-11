@@ -101,8 +101,12 @@ export function ProductDetailPage() {
     );
   }
 
-  const productCategory = typeof product.category === 'object' ? product.category.name : product.category;
-  const categoryName = typeof productCategory === 'string' ? productCategory : '';
+  const productCategory = typeof product.category === 'object' && product.category !== null
+    ? product.category.name
+    : product.category;
+  const categoryName = typeof productCategory === 'string' && productCategory
+    ? productCategory
+    : 'Uncategorized';
 
   return (
     <div className="min-h-screen bg-background">

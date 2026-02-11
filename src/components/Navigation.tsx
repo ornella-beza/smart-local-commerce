@@ -21,7 +21,10 @@ export function Navigation() {
     const fetchCategories = async () => {
       try {
         const data = await api.getCategories();
-        const categoryNames = data.map((cat: any) => cat.name);
+        // Filter out null/undefined categories and safely extract names
+        const categoryNames = (Array.isArray(data) ? data : [])
+          .filter((cat: any) => cat !== null && cat !== undefined && cat.name)
+          .map((cat: any) => cat.name);
         setCategories(categoryNames);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
