@@ -84,11 +84,8 @@ export function ProductsPage() {
   }, []);
 
   const filteredProducts = products.filter((product) => {
-    // Skip products with null/undefined name
-    if (!product || !product.name) return false;
-    
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const productShop = typeof product.shop === 'object' && product.shop !== null ? product.shop : shops.find(s => s._id === product.shop);
+    const productShop = typeof product.shop === 'object' ? product.shop : shops.find(s => s._id === product.shop);
     const productLocation = productShop?.location || product.location;
     const matchesArea = !selectedArea || productLocation === selectedArea;
     
