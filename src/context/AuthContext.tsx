@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { api } from '../services/api';
+import { authService } from '../features/auth/services/auth.service';
 
 type User = {
   id: string;
@@ -18,7 +18,7 @@ type AuthContextType = {
   loading: boolean;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       console.log('[AuthContext] Starting login for:', email);
-      const response = await api.login({ email, password });
+      const response = await authService.login({ email, password });
       console.log('[AuthContext] Login response received:', {
         hasToken: !!response.token,
         hasUser: !!response.user,
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Map frontend role to backend role
       const backendRole = role === 'business' ? 'business_owner' : 'customer';
       
-      const response = await api.register({ name, email, password, role: backendRole });
+      const response = await authService.register({ name, email, password, role: backendRole });
       
       if (response.token && response.user) {
         // Store token and user data
