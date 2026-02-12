@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { api } from '../services/api';
+import { cartService } from '../features/cart/services/cart.service';
 import { useAuth } from './AuthContext';
 
 interface CartItem {
@@ -51,7 +51,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     try {
       setLoading(true);
-      const cartData = await api.getCart();
+      const cartData = await cartService.getCart();
       setCart(cartData);
     } catch (error: any) {
       // Handle token expiration
@@ -78,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await api.addToCart(productId, quantity);
+      const response = await cartService.addToCart(productId, quantity);
       if (response.cart) {
         setCart(response.cart);
       } else {
@@ -96,7 +96,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await api.updateCartItem(productId, quantity);
+      const response = await cartService.updateCartItem(productId, quantity);
       if (response.cart) {
         setCart(response.cart);
       } else {
@@ -114,7 +114,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await api.removeFromCart(productId);
+      const response = await cartService.removeFromCart(productId);
       if (response.cart) {
         setCart(response.cart);
       } else {
@@ -132,7 +132,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      await api.clearCart();
+      await cartService.clearCart();
       await refreshCart();
     } catch (error: any) {
       console.error('Failed to clear cart:', error);
