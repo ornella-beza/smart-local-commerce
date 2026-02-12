@@ -8,9 +8,9 @@ import { EditProductModal } from '../components/EditProductModal';
 import { AddShopModal } from '../components/AddShopModal';
 import { EditShopModal } from '../components/EditShopModal';
 import { AddPromotionModal } from '../components/AddPromotionModal';
-import { Card, CardContent } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { Button } from '@/shared/components/ui/button';
+import { Badge } from '@/shared/components/ui/badge';
 import { 
   Package, 
   Store, 
@@ -117,7 +117,7 @@ export function BusinessDashboard() {
   const fetchData = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      setError('Authentication token not found. Please log in again.');
+      setError('Please log in to access the business dashboard.');
       setLoading(false);
       return;
     }
@@ -126,46 +126,19 @@ export function BusinessDashboard() {
       setLoading(true);
       setError(null);
       
-      // Fetch data - if any call fails with auth error, we'll handle it
       const [shopsData, productsData, promotionsData] = await Promise.all([
-        api.getMyShops().catch((err) => {
-          // If it's an auth error, throw it so we can handle it
-          if (err.message?.includes('Authentication') || err.message?.includes('401') || err.message?.includes('403')) {
-            throw err;
-          }
-          // Otherwise return empty array
-          return [];
-        }),
-        api.getMyProducts().catch((err) => {
-          if (err.message?.includes('Authentication') || err.message?.includes('401') || err.message?.includes('403')) {
-            throw err;
-          }
-          return [];
-        }),
-        api.getMyPromotions().catch((err) => {
-          if (err.message?.includes('Authentication') || err.message?.includes('401') || err.message?.includes('403')) {
-            throw err;
-          }
-          return [];
-        }),
+        api.getShops(),
+        api.getProducts(),
+        api.getPromotions(),
       ]);
 
-      // Success - set the data
       setShops(Array.isArray(shopsData) ? shopsData : []);
       setProducts(Array.isArray(productsData) ? productsData : []);
       setPromotions(Array.isArray(promotionsData) ? promotionsData : []);
-      setError(null); // Clear any errors
+      setError(null);
       
     } catch (error: any) {
-      // Authentication error - clear token and show message
-      const errorMessage = error.message || '';
-      if (errorMessage.includes('Authentication') || errorMessage.includes('401') || errorMessage.includes('403')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setError('Your session has expired. Please log in again.');
-      } else {
-        setError('Failed to load dashboard data. Please try again.');
-      }
+      setError('Failed to load dashboard data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -209,31 +182,35 @@ export function BusinessDashboard() {
 
   // Statistics
   const totalRevenue = products.reduce((sum, p) => sum + (p.price * (p.stock || 0)), 0);
-  const categoryData = products.reduce((acc: { label: string; value: number; color: string }[], product) => {
-    const categoryName = typeof product.category === 'object' ? product.category.name : product.category;
-    const existing = acc.find((item) => item.label === categoryName);
-    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-    if (existing) {
-      existing.value++;
-    } else {
-      acc.push({ 
-        label: categoryName, 
-        value: 1,
-        color: colors[acc.length % colors.length]
-      });
-    }
-    return acc;
-  }, []);
+  const categoryData = products
+    .filter(product => product && product.category)
+    .reduce((acc: { label: string; value: number; color: string }[], product) => {
+      const categoryName = typeof product.category === 'object' && product.category !== null
+        ? product.category.name
+        : (typeof product.category === 'string' ? product.category : 'Unknown');
+      const existing = acc.find((item) => item.label === categoryName);
+      const colors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080'];
+      if (existing) {
+        existing.value++;
+      } else {
+        acc.push({ 
+          label: categoryName, 
+          value: 1,
+          color: colors[acc.length % colors.length]
+        });
+      }
+      return acc;
+    }, []);
 
 
   const salesByArea = [
-    { label: 'Mon', value: 5 },
-    { label: 'Tue', value: 8 },
-    { label: 'Wed', value: 6 },
-    { label: 'Thu', value: 12 },
-    { label: 'Fri', value: 10 },
-    { label: 'Sat', value: 15 },
-    { label: 'Sun', value: 13 },
+    { label: 'Mon', value: 0 },
+    { label: 'Tue', value: 0 },
+    { label: 'Wed', value: 0 },
+    { label: 'Thu', value: 0 },
+    { label: 'Fri', value: 0 },
+    { label: 'Sat', value: 0 },
+    { label: 'Sun', value: 0 },
   ];
 
   if (authLoading || loading) {
@@ -320,7 +297,7 @@ export function BusinessDashboard() {
                   icon={Store}
                   change="+2"
                   trend="up"
-                  color="bg-blue-500"
+                  color="bg-black"
                 />
                 <StatCard
                   title="Total Products"
@@ -328,7 +305,7 @@ export function BusinessDashboard() {
                   icon={Package}
                   change={`+${products.length}`}
                   trend="up"
-                  color="bg-green-500"
+                  color="bg-gray-800"
                 />
                 <StatCard
                   title="Active Promotions"
@@ -336,13 +313,13 @@ export function BusinessDashboard() {
                   icon={Tag}
                   change="Live"
                   trend="up"
-                  color="bg-orange-500"
+                  color="bg-gray-600"
                 />
                 <StatCard
                   title="Total Stock Value"
                   value={`RWF ${totalRevenue.toLocaleString()}`}
                   icon={DollarSign}
-                  color="bg-purple-500"
+                  color="bg-gray-900"
                 />
               </div>
 
@@ -363,16 +340,16 @@ export function BusinessDashboard() {
           )}
 
           {/* Shops Section */}
-          {(activeSection === 'dashboard' || activeSection === 'shops') && (
+          {activeSection === 'shops' && (
           <Card className="mb-8">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Store className="w-6 h-6 text-blue-500" />
+                  <Store className="w-6 h-6 text-black" />
                   <h2 className="text-2xl font-bold">My Shops</h2>
                   <Badge>{shops.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddShop(true)}>
+                <Button onClick={() => setShowAddShop(true)} className="bg-black hover:bg-gray-800">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Shop
                 </Button>
@@ -439,16 +416,16 @@ export function BusinessDashboard() {
           )}
 
           {/* Products Section */}
-          {(activeSection === 'dashboard' || activeSection === 'products') && (
+          {activeSection === 'products' && (
           <Card className="mb-8">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Package className="w-6 h-6 text-green-500" />
+                  <Package className="w-6 h-6 text-black" />
                   <h2 className="text-2xl font-bold">My Products</h2>
                   <Badge>{products.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddProduct(true)}>
+                <Button onClick={() => setShowAddProduct(true)} className="bg-black hover:bg-gray-800">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Product
                 </Button>
@@ -473,8 +450,10 @@ export function BusinessDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {products.map((product) => {
-                        const categoryName = typeof product.category === 'object' ? product.category.name : product.category;
+                      {products.filter(p => p && p.category).map((product) => {
+                        const categoryName = typeof product.category === 'object' && product.category !== null
+                          ? product.category.name
+                          : (typeof product.category === 'string' ? product.category : 'Unknown');
                         return (
                           <tr key={product._id} className="border-b hover:bg-muted/50">
                             <td className="p-3">
@@ -555,16 +534,16 @@ export function BusinessDashboard() {
           )}
 
           {/* Promotions Section */}
-          {(activeSection === 'dashboard' || activeSection === 'promotions') && (
+          {activeSection === 'promotions' && (
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Tag className="w-6 h-6 text-orange-500" />
+                  <Tag className="w-6 h-6 text-black" />
                   <h2 className="text-2xl font-bold">My Promotions</h2>
                   <Badge>{promotions.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddPromotion(true)}>
+                <Button onClick={() => setShowAddPromotion(true)} className="bg-black hover:bg-gray-800">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Promotion
                 </Button>
