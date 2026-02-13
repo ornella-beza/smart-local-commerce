@@ -85,7 +85,39 @@ export function AppRoutes() {
           />
           
           <Route
-            path="/business/dashboard/*"
+            path="/business/dashboard"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/products"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/shops"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/orders"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/promotions"
             element={
               <ProtectedRoute role="business">
                 <BusinessOwnerPage />
