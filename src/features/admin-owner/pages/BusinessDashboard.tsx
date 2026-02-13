@@ -5,6 +5,7 @@ import { productService } from '../../product/services/product.service';
 import { shopService } from '../../shop/services/shop.service';
 import { promotionsService } from '../../promotions/services/promotions.service';
 import { businessService } from '../../business-owner/services/business.service';
+import { fetchAPI } from '../../../services/apiClient';
 import { BusinessLayout } from '../../../components/shared/BusinessLayout';
 import { AddProductModal } from '../../product/components/AddProductModal';
 import { EditProductModal } from '../../product/components/EditProductModal';
@@ -21,9 +22,10 @@ import {
   Plus, 
   Edit, 
   Trash2,
-  DollarSign
+  DollarSign,
+  ShoppingBag
 } from 'lucide-react';
-import { StatCard, EnhancedBarChart as BarChart, PieChart } from '../../../components/shared/EnhancedCharts';
+import { PieChart } from '../../../components/shared/EnhancedCharts';
 
 interface Shop {
   _id: string;
@@ -61,23 +63,39 @@ interface Promotion {
   isActive?: boolean;
 }
 
+interface Order {
+  _id: string;
+  user: { _id: string; name: string; email: string } | string;
+  items: Array<{
+    product: { _id: string; name: string; image?: string } | string;
+    quantity: number;
+    price: number;
+  }>;
+  totalAmount: number;
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  createdAt: string;
+  shippingAddress?: string;
+}
+
 export function BusinessDashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const location = useLocation();
   
   // Determine active section from URL
-  const getActiveSectionFromPath = (): 'dashboard' | 'shops' | 'products' | 'promotions' => {
+  const getActiveSectionFromPath = (): 'dashboard' | 'shops' | 'products' | 'promotions' | 'orders' => {
     const path = location.pathname;
     if (path.includes('/shops')) return 'shops';
     if (path.includes('/products')) return 'products';
     if (path.includes('/promotions')) return 'promotions';
+    if (path.includes('/orders')) return 'orders';
     return 'dashboard';
   };
   
-  const [activeSection, setActiveSection] = useState<'dashboard' | 'shops' | 'products' | 'promotions'>(getActiveSectionFromPath());
+  const [activeSection, setActiveSection] = useState<'dashboard' | 'shops' | 'products' | 'promotions' | 'orders'>(getActiveSectionFromPath());
   const [shops, setShops] = useState<Shop[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -130,7 +148,7 @@ export function BusinessDashboard() {
       setError(null);
       
       // Fetch data - if any call fails with auth error, we'll handle it
-      const [shopsData, productsData, promotionsData] = await Promise.all([
+      const [shopsData, productsData, promotionsData, ordersData] = await Promise.all([
         businessService.getMyShops().catch((err: any) => {
           // If it's an auth error, throw it so we can handle it
           if (err.message?.includes('Authentication') || err.message?.includes('401') || err.message?.includes('403')) {
@@ -151,12 +169,19 @@ export function BusinessDashboard() {
           }
           return [];
         }),
+        fetchAPI('/orders').catch((err: any) => {
+          if (err.message?.includes('Authentication') || err.message?.includes('401') || err.message?.includes('403')) {
+            throw err;
+          }
+          return [];
+        }),
       ]);
 
       // Success - set the data
       setShops(Array.isArray(shopsData) ? shopsData : []);
       setProducts(Array.isArray(productsData) ? productsData : []);
       setPromotions(Array.isArray(promotionsData) ? promotionsData : []);
+      setOrders(Array.isArray(ordersData) ? ordersData : []);
       setError(null); // Clear any errors
       
     } catch (error: any) {
@@ -316,47 +341,91 @@ export function BusinessDashboard() {
           {activeSection === 'dashboard' && (
             <>
               {/* Statistics Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <StatCard
-                  title="Total Shops"
-                  value={shops.length}
-                  icon={Store}
-                  change="+2"
-                  trend="up"
-                  color="bg-blue-500"
-                />
-                <StatCard
-                  title="Total Products"
-                  value={products.length}
-                  icon={Package}
-                  change={`+${products.length}`}
-                  trend="up"
-                  color="bg-green-500"
-                />
-                <StatCard
-                  title="Active Promotions"
-                  value={promotions.filter(p => p.isActive).length}
-                  icon={Tag}
-                  change="Live"
-                  trend="up"
-                  color="bg-orange-500"
-                />
-                <StatCard
-                  title="Total Stock Value"
-                  value={totalRevenue}
-                  icon={DollarSign}
-                  color="bg-purple-500"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <Card className="border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Total Shops</p>
+                        <p className="text-3xl font-bold text-gray-900">{shops.length}</p>
+                        <p className="text-sm text-green-600 mt-1">+2 this month</p>
+                      </div>
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Store className="w-6 h-6 text-blue-600" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Total Products</p>
+                        <p className="text-3xl font-bold text-gray-900">{products.length}</p>
+                        <p className="text-sm text-green-600 mt-1">+{products.length} items</p>
+                      </div>
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <Package className="w-6 h-6 text-green-600" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Total Stock Value</p>
+                        <p className="text-3xl font-bold text-gray-900">RWF {totalRevenue.toLocaleString()}</p>
+                        <p className="text-sm text-gray-500 mt-1">Inventory value</p>
+                      </div>
+                      <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <DollarSign className="w-6 h-6 text-purple-600" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Active Promotions</p>
+                        <p className="text-3xl font-bold text-gray-900">{promotions.filter(p => p.isActive).length}</p>
+                        <p className="text-sm text-orange-600 mt-1">Live campaigns</p>
+                      </div>
+                      <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <Tag className="w-6 h-6 text-orange-600" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <Card>
+                <Card className="border-0 shadow-sm">
                   <CardContent className="p-6">
-                    <BarChart data={salesData} title="Weekly Sales" />
+                    <h3 className="font-semibold text-lg mb-4">Weekly Sales</h3>
+                    <div className="h-64 flex items-end justify-between gap-2">
+                      {salesData.map((item, index) => (
+                        <div key={index} className="flex-1 flex flex-col items-center">
+                          <div className="w-full flex flex-col justify-end" style={{ height: '200px' }}>
+                            <div
+                              className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t transition-all hover:from-blue-600 hover:to-blue-500"
+                              style={{
+                                height: `${(item.value / Math.max(...salesData.map(d => d.value))) * 100}%`,
+                              }}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-600 mt-2">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="border-0 shadow-sm">
                   <CardContent className="p-6">
                     <PieChart data={categoryData} title="Products by Category" />
                   </CardContent>
@@ -366,7 +435,58 @@ export function BusinessDashboard() {
           )}
 
           {/* Shops Section */}
-          {(activeSection === 'dashboard' || activeSection === 'shops') && (
+          {activeSection === 'dashboard' && (
+          <Card className="mb-8">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <Store className="w-6 h-6 text-blue-500" />
+                  <h2 className="text-2xl font-bold">My Shops</h2>
+                  <Badge>{shops.length}</Badge>
+                </div>
+              </div>
+
+              {shops.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Store className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>No shops yet.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {shops.map((shop) => (
+                    <Card key={shop._id} className="overflow-hidden">
+                      <div className="relative h-32 bg-muted">
+                        {shop.image ? (
+                          <img
+                            src={shop.image}
+                            alt={shop.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                            <Store className="w-12 h-12" />
+                          </div>
+                        )}
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-bold text-lg mb-2">{shop.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-1">{shop.location}</p>
+                        <p className="text-xs text-muted-foreground">{shop.email}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          )}
+
+          {/* Shops Section */}
+          {activeSection === 'shops' && (
           <Card className="mb-8">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -623,6 +743,82 @@ export function BusinessDashboard() {
                       </Card>
                     );
                   })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          )}
+
+          {/* Orders Section */}
+          {activeSection === 'orders' && (
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-6 h-6 text-green-500" />
+                  <h2 className="text-2xl font-bold">Orders</h2>
+                  <Badge>{orders.length}</Badge>
+                </div>
+              </div>
+
+              {orders.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <ShoppingBag className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>No orders yet.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-3">Order ID</th>
+                        <th className="text-left p-3">Customer</th>
+                        <th className="text-left p-3">Items</th>
+                        <th className="text-left p-3">Total</th>
+                        <th className="text-left p-3">Status</th>
+                        <th className="text-left p-3">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => {
+                        const customerName = typeof order.user === 'object' ? order.user.name : 'N/A';
+                        const customerEmail = typeof order.user === 'object' ? order.user.email : '';
+                        const statusColors = {
+                          pending: 'bg-yellow-100 text-yellow-800',
+                          processing: 'bg-blue-100 text-blue-800',
+                          completed: 'bg-green-100 text-green-800',
+                          cancelled: 'bg-red-100 text-red-800'
+                        };
+                        
+                        return (
+                          <tr key={order._id} className="border-b hover:bg-muted/50">
+                            <td className="p-3">
+                              <div className="font-mono text-sm">{order._id.slice(-8)}</div>
+                            </td>
+                            <td className="p-3">
+                              <div className="font-semibold">{customerName}</div>
+                              <div className="text-xs text-muted-foreground">{customerEmail}</div>
+                            </td>
+                            <td className="p-3">
+                              <div className="text-sm">{order.items.length} item(s)</div>
+                            </td>
+                            <td className="p-3">
+                              <div className="font-bold">RWF {order.totalAmount.toLocaleString()}</div>
+                            </td>
+                            <td className="p-3">
+                              <Badge className={statusColors[order.status]}>
+                                {order.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3">
+                              <div className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</div>
+                              <div className="text-xs text-muted-foreground">{new Date(order.createdAt).toLocaleTimeString()}</div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
