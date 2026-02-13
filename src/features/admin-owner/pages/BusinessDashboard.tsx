@@ -495,10 +495,12 @@ export function BusinessDashboard() {
                   <h2 className="text-2xl font-bold">My Shops</h2>
                   <Badge>{shops.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddShop(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Shop
-                </Button>
+                {activeSection === 'shops' && (
+                  <Button onClick={() => setShowAddShop(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Shop
+                  </Button>
+                )}
               </div>
 
               {shops.length === 0 ? (
@@ -571,10 +573,12 @@ export function BusinessDashboard() {
                   <h2 className="text-2xl font-bold">My Products</h2>
                   <Badge>{products.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddProduct(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Product
-                </Button>
+                {activeSection === 'products' && (
+                  <Button onClick={() => setShowAddProduct(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Product
+                  </Button>
+                )}
               </div>
 
               {products.length === 0 ? (
@@ -687,10 +691,12 @@ export function BusinessDashboard() {
                   <h2 className="text-2xl font-bold">My Promotions</h2>
                   <Badge>{promotions.length}</Badge>
                 </div>
-                <Button onClick={() => setShowAddPromotion(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Promotion
-                </Button>
+                {activeSection === 'promotions' && (
+                  <Button onClick={() => setShowAddPromotion(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Promotion
+                  </Button>
+                )}
               </div>
 
               {promotions.length === 0 ? (
