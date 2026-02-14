@@ -66,12 +66,16 @@ export function BlogPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post: any) => (
-            <Link key={post.id} to={`/blog/${post.id}`}>
+            <Link key={post._id} to={`/blog/${post._id}`}>
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <img
-                  src={post.image}
+                  src={post.featuredImage || post.image || '/placeholder-image.jpg'}
                   alt={post.title}
                   className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder-image.jpg';
+                  }}
                 />
                 <CardContent className="p-6">
                   <Badge className="mb-3">{post.category}</Badge>
@@ -81,7 +85,7 @@ export function BlogPage() {
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <User className="w-4 h-4" />
-                      <span>{post.author}</span>
+                      <span>{typeof post.author === 'object' ? post.author.name : post.author}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />

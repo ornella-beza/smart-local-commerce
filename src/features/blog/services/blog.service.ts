@@ -1,14 +1,19 @@
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export const blogService = {
   getBlogPosts: async () => {
     try {
+      console.log('Fetching from:', `${API_BASE}/blog`);
       const response = await fetch(`${API_BASE}/blog`);
-      if (!response.ok) throw new Error('Failed to fetch blog posts');
-      return response.json();
+      console.log('Response status:', response.status);
+      if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch blog posts`);
+      const data = await response.json();
+      console.log('Fetched blog posts:', data);
+      // Handle both array and object responses
+      return Array.isArray(data) ? data : (data.posts || data.data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-      // Fallback to mock data
+      console.log('Falling back to mock data');
       const { blogPosts } = await import('../../../data/mockData');
       return blogPosts;
     }
@@ -16,12 +21,16 @@ export const blogService = {
   
   getBlogPost: async (id: string) => {
     try {
-      const response = await fetch(`${API_BASE}/blog/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch blog post');
-      return response.json();
+      console.log('Fetching post from:', `${API_BASE}/blog/id/${id}`);
+      const response = await fetch(`${API_BASE}/blog/id/${id}`);
+      console.log('Response status:', response.status);
+      if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch blog post`);
+      const data = await response.json();
+      console.log('Fetched blog post:', data);
+      return data;
     } catch (error) {
       console.error('Error fetching blog post:', error);
-      // Fallback to mock data
+      console.log('Falling back to mock data');
       const { blogPosts } = await import('../../../data/mockData');
       return blogPosts.find((post: any) => post.id === id);
     }

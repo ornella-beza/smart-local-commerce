@@ -24,7 +24,7 @@ export function BlogDetailPage() {
         ]);
         
         setPost(postData);
-        setRelatedPosts(allPosts.filter((p: any) => p.id !== id).slice(0, 2));
+        setRelatedPosts(allPosts.filter((p: any) => p._id !== id).slice(0, 2));
       } catch (err) {
         setError('Failed to load blog post');
       } finally {
@@ -82,7 +82,7 @@ export function BlogDetailPage() {
           <div className="flex flex-wrap items-center gap-6 text-muted-foreground mb-8">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5" />
-              <span className="font-medium">{post.author}</span>
+              <span className="font-medium">{typeof post.author === 'object' ? post.author.name : post.author}</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5" />
@@ -99,7 +99,7 @@ export function BlogDetailPage() {
           </div>
 
           <img
-            src={post.image}
+            src={post.featuredImage || post.image}
             alt={post.title}
             className="w-full h-96 object-cover rounded-xl mb-8"
           />
@@ -121,7 +121,7 @@ export function BlogDetailPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Written by</p>
-                  <p className="font-bold text-lg">{post.author}</p>
+                  <p className="font-bold text-lg">{typeof post.author === 'object' ? post.author.name : post.author}</p>
                 </div>
                 <Button variant="outline" size="sm">
                   <Share2 className="w-4 h-4 mr-2" />
@@ -136,10 +136,10 @@ export function BlogDetailPage() {
               <h3 className="font-bold text-2xl mb-6">More Articles</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {relatedPosts.map((relatedPost) => (
-                  <Link key={relatedPost.id} to={`/blog/${relatedPost.id}`}>
+                  <Link key={relatedPost._id} to={`/blog/${relatedPost._id}`}>
                     <Card className="hover:shadow-lg transition-shadow">
                       <img
-                        src={relatedPost.image}
+                        src={relatedPost.featuredImage || relatedPost.image}
                         alt={relatedPost.title}
                         className="w-full h-40 object-cover"
                       />
