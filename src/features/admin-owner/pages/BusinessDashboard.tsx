@@ -238,7 +238,7 @@ export function BusinessDashboard() {
   // Statistics
   const totalRevenue = products.reduce((sum, p) => sum + (p.price * (p.stock || 0)), 0);
   const categoryData = products.reduce((acc: { label: string; value: number; color: string }[], product) => {
-    const categoryName = typeof product.category === 'object' ? product.category.name : product.category;
+    const categoryName = product.category && typeof product.category === 'object' ? product.category.name : (product.category || 'Uncategorized');
     const existing = acc.find((item) => item.label === categoryName);
     const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
     if (existing) {
@@ -601,7 +601,7 @@ export function BusinessDashboard() {
                     </thead>
                     <tbody>
                       {products.map((product) => {
-                        const categoryName = typeof product.category === 'object' ? product.category.name : product.category;
+                        const categoryName = product.category && typeof product.category === 'object' ? product.category.name : (product.category || 'Uncategorized');
                         return (
                           <tr key={product._id} className="border-b hover:bg-muted/50">
                             <td className="p-3">
