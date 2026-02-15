@@ -1,5 +1,5 @@
  // business
- import { Link, useLocation } from 'react-router-dom';
+ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -28,6 +29,7 @@ const sidebarItems: SidebarItem[] = [
 
 export function BusinessSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
@@ -61,7 +63,7 @@ export function BusinessSidebar() {
                   onClick={() => setIsMobileOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-md'
+                      ? 'bg-gray-900 text-white shadow-md'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -71,6 +73,16 @@ export function BusinessSidebar() {
               );
             })}
           </nav>
+
+          <div className="p-4 border-t border-gray-200">
+            <button
+              onClick={() => navigate('/')}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-900 hover:text-white transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">Logout</span>
+            </button>
+          </div>
         </div>
       </aside>
 
