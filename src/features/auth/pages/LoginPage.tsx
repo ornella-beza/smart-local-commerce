@@ -37,8 +37,6 @@ export function LoginPage() {
             navigate('/admin/dashboard');
           } else if (user.role === 'business_owner') {
             navigate('/business/dashboard');
-          } else if (user.role === 'customer') {
-            navigate('/customer/dashboard');
           } else {
             navigate('/');
           }
