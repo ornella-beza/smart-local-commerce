@@ -15,6 +15,8 @@ import { ProductDetailPage } from '../features/product/pages/ProductDetailPage';
 import { PromotionsPage } from '../features/promotions/PromotionsPage';
 import { CartPage } from '../features/cart/pages/CartPage';
 import { CheckoutPage } from '../features/cart/pages/CheckoutPage';
+import { OrderConfirmationPage } from '../features/cart/pages/OrderConfirmationPage';
+import { OrdersPage } from '../features/cart/pages/OrdersPage';
 import { PromotionDetailPage } from '../features/promotions/pages/PromotionDetailPage';
 import { BlogPage } from '../features/blog/BlogPage';
 import { BlogDetailPage } from '../features/blog/pages/BlogDetailPage';
@@ -70,6 +72,8 @@ export function AppRoutes() {
           <Route path="/product/:id" element={<Layout><ProductDetailPage /></Layout>} />
           <Route path="/cart" element={<Layout><CartPage /></Layout>} />
           <Route path="/checkout" element={<Layout><CheckoutPage /></Layout>} />
+          <Route path="/order-confirmation" element={<Layout><OrderConfirmationPage /></Layout>} />
+          <Route path="/orders" element={<Layout><OrdersPage /></Layout>} />
           <Route path="/promotions" element={<Layout><PromotionsPage /></Layout>} />
           <Route path="/promotion/:id" element={<Layout><PromotionDetailPage /></Layout>} />
           <Route path="/blog" element={<Layout><BlogPage /></Layout>} />
@@ -85,7 +89,39 @@ export function AppRoutes() {
           />
           
           <Route
-            path="/business/dashboard/*"
+            path="/business/dashboard"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/products"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/shops"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/orders"
+            element={
+              <ProtectedRoute role="business">
+                <BusinessOwnerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business/promotions"
             element={
               <ProtectedRoute role="business">
                 <BusinessOwnerPage />

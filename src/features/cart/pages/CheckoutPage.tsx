@@ -6,15 +6,13 @@ import { cartService } from '../services/cart.service';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export function CheckoutPage() {
   const { cart, loading, clearCart, totalAmount } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
-  const [orderId, setOrderId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: user?.name || '',
@@ -85,9 +83,9 @@ export function CheckoutPage() {
       const response = await cartService.checkout(orderData);
       
       if (response.order) {
-        setOrderId(response.order._id);
-        setOrderPlaced(true);
         await clearCart();
+        // Navigate to order confirmation page with the order ID
+        navigate('/order-confirmation', { state: { orderId: response.order._id } });
       }
     } catch (error: any) {
       alert(error.message || 'Failed to place order. Please try again.');
@@ -96,27 +94,6 @@ export function CheckoutPage() {
       setSubmitting(false);
     }
   };
-
-  if (orderPlaced) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="max-w-md w-full mx-4">
-          <CardContent className="p-8 text-center">
-            <CheckCircle2 className="w-20 h-20 mx-auto mb-6 text-green-600" />
-            <h2 className="text-2xl font-bold mb-2">Order Placed Successfully!</h2>
-            <p className="text-muted-foreground mb-4">
-              Thank you for your order. Your order ID is:
-            </p>
-            <p className="font-mono text-sm bg-muted p-2 rounded mb-6">{orderId}</p>
-            <div className="flex gap-4 justify-center">
-              <Button onClick={() => navigate('/products')}>Continue Shopping</Button>
-              <Button variant="outline" onClick={() => navigate('/')}>Go Home</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   if (loading || !cart || cart.items.length === 0) {
     return (

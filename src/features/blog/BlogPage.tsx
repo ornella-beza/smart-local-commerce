@@ -1,5 +1,2 @@
-import { BlogPage as BlogPageComponent } from './pages/BlogPage';
-
-export function BlogPage() {
-  return <BlogPageComponent />;
-}
+export { BlogPage } from './pages/BlogPage';
+export { BlogDetailPage } from './pages/BlogDetailPage';
