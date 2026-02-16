@@ -8,6 +8,7 @@ import { EditShopModal } from '../../shop/components/EditShopModal';
 import { AddPromotionModal } from '../../promotions/components/AddPromotionModal';
 import { AddCategoryModal } from '../../categories/components/AddCategoryModal';
 import { EditCategoryModal } from '../../categories/components/EditCategoryModal';
+import { EditUserModal } from '../components/EditUserModal';
 import { productService } from '../../product/services/product.service';
 import { categoriesService } from '../../categories/services/categories.service';
 import { adminService } from '../services/admin.service';
@@ -187,7 +188,7 @@ function DashboardOverview() {
           change="+12%"
           trend="up"
           icon={Store}
-          color="bg-gradient-to-br from-blue-500 to-blue-600"
+          color="bg-gray-900"
         />
         <StatCard
           title="Total Products"
@@ -195,7 +196,7 @@ function DashboardOverview() {
           change="+8%"
           trend="up"
           icon={Package}
-          color="bg-gradient-to-br from-green-500 to-green-600"
+          color="bg-gray-900"
         />
         <StatCard
           title="Active Promotions"
@@ -203,7 +204,7 @@ function DashboardOverview() {
           change="+5%"
           trend="up"
           icon={Tag}
-          color="bg-gradient-to-br from-orange-500 to-orange-600"
+          color="bg-gray-900"
         />
         <StatCard
           title="Low Stock Items"
@@ -211,7 +212,7 @@ function DashboardOverview() {
           change="Attention"
           trend="down"
           icon={Activity}
-          color="bg-gradient-to-br from-red-500 to-red-600"
+          color="bg-gray-900"
         />
         </div>
 
@@ -262,139 +263,40 @@ function DashboardOverview() {
   );
 }
 
-function AnalyticsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [shops, setShops] = useState<Shop[]>([]);
+function UsersPage() {
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUsers = async () => {
       try {
-        const [productsData, shopsData] = await Promise.all([
-          adminService.getAllProducts(),
-          adminService.getAllShops(),
-        ]);
+        setLoading(true);
+        const usersData = await adminService.getAllUsers();
         // Filter out null/undefined items
-        const validProducts = Array.isArray(productsData) ? productsData.filter(p => p !== null && p !== undefined) : [];
-        const validShops = Array.isArray(shopsData) ? shopsData.filter(s => s !== null && s !== undefined) : [];
-        setProducts(validProducts);
-        setShops(validShops);
+        const validUsers = Array.isArray(usersData) ? usersData.filter(u => u !== null && u !== undefined) : [];
+        setUsers(validUsers);
       } catch (error) {
-        console.error('Failed to fetch analytics data:', error);
+        console.error('Failed to fetch users:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+
+    fetchUsers();
   }, []);
 
-  if (loading) {
-    return <div className="text-center py-12">Loading analytics...</div>;
-  }
-
-  // Category distribution
-  const categoryData = products.reduce((acc: { label: string; value: number; color: string }[], product) => {
-    const categoryName = typeof product.category === 'object' && product.category ? product.category.name : 'Unknown';
-    const existing = acc.find((item) => item.label === categoryName);
-    if (existing) {
-      existing.value++;
-    } else {
-      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
-      acc.push({
-        label: categoryName,
-        value: 1,
-        color: colors[acc.length % colors.length],
-      });
+  const refreshUsers = async () => {
+    try {
+      const usersData = await adminService.getAllUsers();
+      const validUsers = Array.isArray(usersData) ? usersData.filter(u => u !== null && u !== undefined) : [];
+      setUsers(validUsers);
+    } catch (error) {
+      console.error('Failed to refresh users:', error);
     }
-    return acc;
-  }, []);
-
-  // Price distribution
-  const priceRanges = [
-    { label: '0-50', min: 0, max: 50 },
-    { label: '50-100', min: 50, max: 100 },
-    { label: '100-200', min: 100, max: 200 },
-    { label: '200+', min: 200, max: Infinity },
-  ];
-
-  const priceData = priceRanges.map((range) => ({
-    label: range.label,
-    value: products.filter((p) => p.price >= range.min && p.price < range.max).length,
-    color: '#3b82f6',
-  }));
-
-  // Monthly trend (mock data)
-  const monthlyTrend = [
-    { label: 'Jan', value: 45 },
-    { label: 'Feb', value: 52 },
-    { label: 'Mar', value: 48 },
-    { label: 'Apr', value: 61 },
-    { label: 'May', value: 55 },
-    { label: 'Jun', value: 67 },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics & Reports</h1>
-        <p className="text-gray-600">Detailed insights and performance metrics</p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <PieChart data={categoryData} title="Product Distribution by Category" />
-        </Card>
-        <Card className="p-6">
-          <EnhancedBarChart data={priceData} title="Products by Price Range" />
-          </Card>
-        </div>
-
-      <Card className="p-6">
-        <EnhancedLineChart data={monthlyTrend} title="Monthly Growth Trend" color="#10b981" />
-      </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6">
-          <div className="text-center">
-            <p className="text-sm text-gray-600 mb-2">Total Revenue</p>
-            <p className="text-3xl font-bold text-gray-900">
-              RWF {products.reduce((sum, p) => sum + p.price, 0).toLocaleString()}
-            </p>
-              </div>
-        </Card>
-        <Card className="p-6">
-          <div className="text-center">
-            <p className="text-sm text-gray-600 mb-2">Average Price</p>
-            <p className="text-3xl font-bold text-gray-900">
-              RWF {products.length > 0 ? Math.round(products.reduce((sum, p) => sum + p.price, 0) / products.length) : 0}
-                      </p>
-                    </div>
-        </Card>
-        <Card className="p-6">
-          <div className="text-center">
-            <p className="text-sm text-gray-600 mb-2">Total Shops</p>
-            <p className="text-3xl font-bold text-gray-900">{shops.length}</p>
-          </div>
-        </Card>
-                    </div>
-                  </div>
-  );
-}
-
-function UsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Mock users data - in real app, you'd have an API endpoint
-    const mockUsers = [
-      { _id: '1', name: 'Admin User', email: 'admin@niceshop.com', role: 'admin', createdAt: '2024-01-15' },
-      { _id: '2', name: 'Simba Supermarket', email: 'simba@shop.com', role: 'business_owner', createdAt: '2024-02-10' },
-      { _id: '3', name: 'Aaky Store', email: 'aaky@shop.com', role: 'business_owner', createdAt: '2024-02-12' },
-    ];
-    setUsers(mockUsers);
-    setLoading(false);
-  }, []);
+  };
 
   if (loading) {
     return <div className="text-center py-12">Loading users...</div>;
@@ -402,14 +304,17 @@ function UsersPage() {
 
   return (
     <div className="space-y-6">
+      {successMessage && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+          {successMessage}
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">User Management</h1>
           <p className="text-gray-600">Manage all platform users</p>
         </div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Add User
-        </button>
       </div>
 
       <Card className="p-6">
@@ -440,7 +345,13 @@ function UsersPage() {
                   </td>
                   <td className="py-3 px-4 text-gray-600">{user.createdAt}</td>
                   <td className="py-3 px-4">
-                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <button 
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setIsEditModalOpen(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
                       Edit
                     </button>
                   </td>
@@ -450,6 +361,21 @@ function UsersPage() {
           </table>
         </div>
       </Card>
+
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onSuccess={() => {
+          setSuccessMessage('User updated successfully!');
+          setTimeout(() => setSuccessMessage(null), 3000);
+          // Refresh users list
+          refreshUsers();
+        }}
+        user={selectedUser}
+      />
     </div>
   );
 }
@@ -497,7 +423,7 @@ function ShopsPage() {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
         >
           Add Shop
         </button>
@@ -523,12 +449,9 @@ function ShopsPage() {
                   setSelectedShop(shop);
                   setIsEditModalOpen(true);
                 }}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                className="flex-1 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 text-sm"
               >
                 Edit
-              </button>
-              <button className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm">
-                View
               </button>
             </div>
           </Card>
@@ -1077,7 +1000,6 @@ export function AdminDashboard() {
       <Routes>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardOverview />} />
-        <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="users" element={<UsersPage />} />
         <Route path="shops" element={<ShopsPage />} />
         <Route path="products" element={<ProductsPage />} />
