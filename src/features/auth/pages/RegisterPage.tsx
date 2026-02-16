@@ -4,7 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Card, CardContent } from '../../../components/ui/card';
-import { Home, Mail, Lock, User, Briefcase, ShoppingBag, Eye, EyeOff } from 'lucide-react';
+import { Home, Mail, Lock, User, Briefcase, ShoppingBag, Eye, EyeOff, Users } from 'lucide-react';
 
 export function RegisterPage() {
   const [name, setName] = useState('');
@@ -13,6 +13,7 @@ export function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [accountType, setAccountType] = useState<'customer' | 'business'>('customer');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,8 +45,8 @@ export function RegisterPage() {
       return;
     }
 
-    // Determine role based on user selection (if any)
-    const userRole = 'customer'; // Default to customer, can be changed based on UI
+    // Determine role based on user selection
+    const userRole = accountType;
     
     // Call API to register
     const result = await register(name, email, password, userRole);
@@ -53,7 +54,12 @@ export function RegisterPage() {
     if (result.success) {
       setSuccess(true);
       setTimeout(() => {
-        navigate('/');
+        // Redirect based on account type
+        if (accountType === 'business') {
+          navigate('/business/dashboard');
+        } else {
+          navigate('/customer/dashboard');
+        }
       }, 1500);
     } else {
       setError(result.error || 'Registration failed. Please try again.');
@@ -78,11 +84,11 @@ export function RegisterPage() {
               </div>
             </div>
             <h2 className="text-4xl font-bold leading-tight">
-              Grow your business with
+              Join
               <span className="text-primary"> NiceShop</span>
             </h2>
             <p className="text-lg text-muted-foreground">
-              Register your business and start selling to thousands of customers across Rwanda.
+              Create your account and start your journey with us today.
             </p>
             <div className="space-y-4 pt-4">
               <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
@@ -96,11 +102,11 @@ export function RegisterPage() {
               </div>
               <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <ShoppingBag className="w-6 h-6 text-blue-600" />
+                  <Users className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">No Login for Customers</h3>
-                  <p className="text-sm text-muted-foreground">Customers can browse and shop without accounts</p>
+                  <h3 className="font-semibold mb-1">For Customers</h3>
+                  <p className="text-sm text-muted-foreground">Browse products, track orders, manage your profile</p>
                 </div>
               </div>
             </div>
@@ -112,8 +118,8 @@ export function RegisterPage() {
           <CardContent className="p-6 sm:p-8 lg:p-12">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Business Registration</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Register your business on NiceShop</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Create Account</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Join NiceShop today</p>
               </div>
               <Link to="/">
                 <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
@@ -199,14 +205,41 @@ export function RegisterPage() {
 
               <div>
                 <label className="block text-sm font-semibold mb-2">Account Type</label>
-                <div className="p-4 rounded-lg border-2 border-primary bg-primary/5">
-                  <div className="flex items-center gap-3">
-                    <Briefcase className="w-6 h-6" />
-                    <div>
-                      <div className="font-semibold">Business Owner</div>
-                      <div className="text-xs text-muted-foreground">Register to sell products on NiceShop</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAccountType('customer')}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      accountType === 'customer'
+                        ? 'border-primary bg-primary/5'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <Users className="w-6 h-6" />
+                      <div>
+                        <div className="font-semibold text-sm">Customer</div>
+                        <div className="text-xs text-muted-foreground">Shop and track orders</div>
+                      </div>
                     </div>
-                  </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAccountType('business')}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      accountType === 'business'
+                        ? 'border-primary bg-primary/5'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <Briefcase className="w-6 h-6" />
+                      <div>
+                        <div className="font-semibold text-sm">Business Owner</div>
+                        <div className="text-xs text-muted-foreground">Sell products</div>
+                      </div>
+                    </div>
+                  </button>
                 </div>
               </div>
 
