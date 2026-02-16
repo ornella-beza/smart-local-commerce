@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
-  BarChart3,
   Users,
   Store,
   Package,
@@ -23,7 +22,6 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   { icon: LayoutDashboard, label: 'Overview', path: '/admin/dashboard' },
-  { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
   { icon: Users, label: 'Users', path: '/admin/users' },
   { icon: Store, label: 'Shops', path: '/admin/shops' },
   { icon: Package, label: 'Products', path: '/admin/products' },
@@ -49,14 +47,14 @@ export function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white z-40 transform transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-full w-64 bg-black text-white z-40 transform transition-transform duration-300 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="p-6 border-b border-gray-700">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold text-white">
               Admin Panel
             </h1>
             <p className="text-sm text-gray-400 mt-1">Smart Commerce</p>
@@ -74,7 +72,7 @@ export function AdminSidebar() {
                   onClick={() => setIsMobileOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      ? 'bg-white text-black shadow-lg'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
