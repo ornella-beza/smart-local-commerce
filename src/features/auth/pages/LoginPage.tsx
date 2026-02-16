@@ -37,6 +37,8 @@ export function LoginPage() {
             navigate('/admin/dashboard');
           } else if (user.role === 'business_owner') {
             navigate('/business/dashboard');
+          } else if (user.role === 'customer') {
+            navigate('/customer/dashboard');
           } else {
             navigate('/');
           }
@@ -84,6 +86,10 @@ export function LoginPage() {
                 <div className="font-bold text-lg mb-1">Business Dashboard</div>
                 <div className="text-sm text-muted-foreground">Manage your products, promotions, and sales</div>
               </div>
+              <div className="p-4 bg-white rounded-xl shadow-sm">
+                <div className="font-bold text-lg mb-1">Customer Dashboard</div>
+                <div className="text-sm text-muted-foreground">Track orders, manage profile, and explore products</div>
+              </div>
             </div>
           </div>
         </div>
@@ -93,8 +99,8 @@ export function LoginPage() {
           <CardContent className="p-6 sm:p-8 lg:p-12">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Admin & Business Login</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Platform management access</p>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Login</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Access your dashboard</p>
               </div>
               <Link to="/">
                 <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
