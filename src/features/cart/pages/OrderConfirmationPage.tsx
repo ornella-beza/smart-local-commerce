@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
-import { CheckCircle2, Package, Truck, CreditCard, MapPin, Phone, Mail } from 'lucide-react';
+import { CheckCircle2, Package, Truck, CreditCard, MapPin, Phone } from 'lucide-react';
 import { fetchAPI } from '../../../services/apiClient';
 
 interface OrderItem {
