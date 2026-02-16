@@ -25,7 +25,11 @@ import { AdminOwnerPage } from '../features/admin-owner/AdminOwnerPage';
 import { BusinessOwnerPage } from '../features/business-owner/BusinessOwnerPage';
 
 function ProtectedRoute({ children, role }: { children: React.ReactNode; role?: 'admin' | 'business' | 'business_owner' }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
   
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
