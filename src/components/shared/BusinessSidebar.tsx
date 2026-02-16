@@ -32,6 +32,12 @@ export function BusinessSidebar() {
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   return (
     <>
       <button
@@ -42,14 +48,14 @@ export function BusinessSidebar() {
       </button>
 
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-gray-50 border-r border-gray-200 z-40 transform transition-transform duration-300 shadow-lg ${
+        className={`fixed left-0 top-0 h-full w-64 bg-black border-r border-gray-800 z-40 transform transition-transform duration-300 shadow-lg ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          <div className="p-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">Business Dashboard</h1>
-            <p className="text-sm text-gray-600 mt-1">Manage your business</p>
+          <div className="p-6 border-b border-gray-800">
+            <h1 className="text-2xl font-bold text-white">Business Dashboard</h1>
+            <p className="text-sm text-gray-400 mt-1">Manage your business</p>
           </div>
 
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -63,8 +69,8 @@ export function BusinessSidebar() {
                   onClick={() => setIsMobileOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     isActive
-                      ? 'bg-gray-900 text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-white text-black shadow-md'
+                      : 'text-white hover:bg-gray-800'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -74,10 +80,10 @@ export function BusinessSidebar() {
             })}
           </nav>
 
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-800">
             <button
-              onClick={() => navigate('/')}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-900 hover:text-white transition-all"
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-gray-800 transition-all w-full"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">Logout</span>

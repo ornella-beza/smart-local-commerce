@@ -2,7 +2,10 @@ import { fetchAPI } from '../../../services/apiClient';
 
 export const promotionsService = {
   getPromotions: () => fetchAPI('/promotions'),
-  getMyPromotions: () => fetchAPI('/promotions/my'),
+  getMyPromotions: async () => {
+    const promotions = await fetchAPI('/promotions');
+    return promotions;
+  },
   getPromotion: (id: string) => fetchAPI(`/promotions/${id}`),
   createPromotion: (formData: FormData) => fetchAPI('/promotions', { method: 'POST', body: formData }),
   updatePromotion: () => Promise.resolve({}),
