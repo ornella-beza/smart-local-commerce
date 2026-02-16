@@ -25,7 +25,7 @@ import { AdminOwnerPage } from '../features/admin-owner/AdminOwnerPage';
 import { BusinessOwnerPage } from '../features/business-owner/BusinessOwnerPage';
 import { CustomerDashboard } from '../features/customer/CustomerDashboard';
 
-function ProtectedRoute({ children, role }: { children: React.ReactNode; role?: 'admin' | 'business' | 'business_owner' }) {
+function ProtectedRoute({ children, role }: { children: React.ReactNode; role?: 'admin' | 'business' | 'business_owner' | 'customer' }) {
   const { user, isAuthenticated, loading } = useAuth();
   
   if (loading) {
