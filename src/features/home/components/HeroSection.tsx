@@ -19,8 +19,13 @@ export function HeroSection() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12">
-              <Link to="/shops" className="w-full sm:w-auto">
+              <Link to="/customer/dashboard" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base">
+                  Customer Dashboard
+                </Button>
+              </Link>
+              <Link to="/shops" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base">
                   Shops
                 </Button>
               </Link>
