@@ -1,3 +1,4 @@
+// customerlayout
 import { CustomerSidebar } from './CustomerSidebar';
 
 export function CustomerLayout({ children }: { children: React.ReactNode }) {
